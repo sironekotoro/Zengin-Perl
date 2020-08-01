@@ -1,7 +1,7 @@
 {
-   "abstract" : "It's new $module",
+   "abstract" : "The perl implementation of ZenginCode.",
    "author" : [
-      "$GIT_AUTHOR_NAME <$GIT_AUTHOR_EMAIL>"
+      "sironekotoro <develop@sironekotoro.com>"
    ],
    "dynamic_config" : 0,
    "generated_by" : "Minilla/v3.1.9, CPAN::Meta::Converter version 2.150010",
@@ -42,7 +42,8 @@
       },
       "runtime" : {
          "requires" : {
-            "perl" : "5.008001"
+            "JSON" : "0",
+            "perl" : "5.010"
          }
       },
       "test" : {
@@ -52,7 +53,21 @@
       }
    },
    "release_status" : "unstable",
+   "resources" : {
+      "bugtracker" : {
+         "web" : "https://github.com/sironekotoro/Zengin-Perl/issues"
+      },
+      "homepage" : "https://github.com/sironekotoro/Zengin-Perl",
+      "repository" : {
+         "type" : "git",
+         "url" : "git://github.com/sironekotoro/Zengin-Perl.git",
+         "web" : "https://github.com/sironekotoro/Zengin-Perl"
+      }
+   },
    "version" : "0.01",
-   "x_serialization_backend" : "JSON::PP version 2.97001",
+   "x_contributors" : [
+      "$GIT_AUTHOR_NAME <$GIT_AUTHOR_EMAIL>"
+   ],
+   "x_serialization_backend" : "JSON::PP version 4.02",
    "x_static_install" : 1
 }

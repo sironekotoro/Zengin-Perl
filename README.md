@@ -2,6 +2,20 @@
 
 Zengin::Perl - The perl implementation of ZenginCode.
 
+# SETUP & SAMPLE
+
+    $ git clone git@github.com:sironekotoro/Zengin-Perl.git
+
+    $ cd Zengin-Perl
+
+    $ git submodule init
+
+    $ git submodule update
+
+    $ cd eg/
+
+    $ perl sample.pl
+
 # SYNOPSIS
 
     use Zengin::Perl;

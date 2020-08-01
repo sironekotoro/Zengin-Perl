@@ -88,8 +88,8 @@ sub all_branches {
 package Branches;
 use JSON qw/decode_json/;
 use File::Spec;
-# use constant { BRANCHES_FOLDER => '../source-data/data/branches', };
-use constant { BRANCHES_FOLDER => 'source-data/data/branches', };
+use constant { BRANCHES_FOLDER => '../source-data/data/branches', };
+# use constant { BRANCHES_FOLDER => 'source-data/data/branches', };
 
 sub new {
     my $class = shift;
@@ -142,7 +142,7 @@ sub _setup_branches {
 }
 
 package Bank;
-use constant { BANKS_JSON => 'source-data/data/banks.json', };
+use constant { BANKS_JSON => '../source-data/data/banks.json', };
 use JSON qw/decode_json/;
 
 sub new {

@@ -297,6 +297,22 @@ __END__
 Zengin::Perl - The perl implementation of ZenginCode.
 
 
+=head1 SETUP & SAMPLE
+
+    $ git clone git@github.com:sironekotoro/Zengin-Perl.git
+
+    $ cd Zengin-Perl
+
+    $ git submodule init
+
+    $ git submodule update
+
+    $ cd eg/
+
+    $ perl sample.pl
+
+
+
 =head1 SYNOPSIS
 
     use Zengin::Perl;
@@ -351,7 +367,6 @@ Zengin::Perl - The perl implementation of ZenginCode.
         print "$branch->{branch_roma}" . "\n";
         print "=" x 20 . "\n";
     }
-
 
 =head1 DESCRIPTION
 

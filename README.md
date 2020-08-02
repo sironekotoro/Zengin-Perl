@@ -2,26 +2,17 @@
 
 Zengin::Perl - The perl implementation of ZenginCode.
 
-# SETUP & SAMPLE
-
-    $ git clone git@github.com:sironekotoro/Zengin-Perl.git
-
-    $ cd Zengin-Perl
-
-    $ git submodule init
-
-    $ git submodule update
-
-    $ cd eg/
-
-    $ perl sample.pl
-
 # SYNOPSIS
 
     use Zengin::Perl;
     binmode STDOUT, ":utf8";
 
-    my $zp = Zengin::Perl->new();
+    # Prepare the source-data in advance.
+    # source-data : https://github.com/zengin-code/source-data
+
+    my $zp = Zengin::Perl->new({
+        source_data_path => '/Users/sironekotoro/Desktop/source-data'
+    });
 
     # bank info
     my $bank = $zp->bank(1);

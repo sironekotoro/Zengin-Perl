@@ -1,7 +1,7 @@
 use Zengin::Perl;
 binmode STDOUT, ":utf8";
 
-my $zp = Zengin::Perl->new();
+my $zp = Zengin::Perl->new( { source_data_path => '', } );
 
 # bank info
 my $bank = $zp->bank(1);
@@ -12,14 +12,15 @@ print $bank->kana() . "\n";    # ミズホ
 print $bank->roma() . "\n";    # mizuho
                                # branch info
 my $branch = $zp->branch(1);
-print $branch->code . "\n";    # 001
-print $branch->name . "\n";    # 東京営業部
-print $branch->hira . "\n";    # とうきよう
-print $branch->kana . "\n";    # トウキヨウ
-print $branch->roma . "\n";    # toukiyou
+print $branch->code() . "\n";    # 001
+print $branch->name() . "\n";    # 東京営業部
+print $branch->hira() . "\n";    # とうきよう
+print $branch->kana() . "\n";    # トウキヨウ
+print $branch->roma() . "\n";    # toukiyou
 
 my $LIMIT = 20;
-                               # branch list
+
+# branch list
 my $branches = $zp->branches();
 
 my $count = 0;
@@ -35,7 +36,6 @@ while ( my ( $branch_code, $branch_info ) = each %{$branches} ) {
 # 660:fukuoka
 # 813:satsuporo
 # ...
-
 
 # all branch list (return ARRAYREF)
 my $all_branch = $zp->all_branches();

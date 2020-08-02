@@ -3,16 +3,44 @@ use 5.010;
 use strict;
 use warnings;
 
-our $VERSION = "0.01";
+our $VERSION = "0.02";
 
 use Carp qw/croak/;
 
 sub new {
     my $class = shift;
+    my $argv  = shift;
 
-    my $self = bless {}, $class;
+    unless ( $argv->{source_data_path} || -e $argv->{source_data_path} ) {
+        croak "'source_data_path' is required in the argument",;
+    }
+
+    my $self = bless {
+
+        banks_file => File::Spec->catfile(
+            $argv->{source_data_path},
+            'data', 'banks.json'
+        ),
+        branches_folder => File::Spec->catfile(
+            $argv->{source_data_path},
+            'data', 'branches'
+        ),
+
+    }, $class;
 
     return $self;
+}
+
+sub banks_file {
+    my $self = shift;
+
+    return $self->{banks_file};
+}
+
+sub branches_folder {
+    my $self = shift;
+
+    return $self->{branches_folder};
 }
 
 sub bank {
@@ -23,9 +51,18 @@ sub bank {
 
     my $bank_code = sprintf( '%04d', $num );
 
-    my $bank = Bank->new($bank_code);
+    my $bank = Bank->new(
+        {   bank_code  => $bank_code,
+            banks_file => $self->banks_file
+        }
+    );
 
-    my $branches = Branches->new($bank_code);
+    my $branches = Branches->new(
+        {   bank_code       => $bank_code,
+            branches_folder => $self->branches_folder
+        }
+    );
+
     $self->branches($branches);
 
     return $bank;
@@ -56,8 +93,13 @@ sub branches {
 }
 
 sub all_branches {
-    my $banks    = Bank->_all_banks();
-    my $branches = Branches->_all_branches();
+    my $self = shift;
+
+    my $banks = Bank->_all_banks( { banks_file => $self->banks_file } );
+
+    my $branches
+        = Branches->_all_branches(
+        { branches_folder => $self->branches_folder } );
 
     my $all_branches = [];
     while ( my ( $bank_code, $branch ) = each %{$branches} ) {
@@ -88,30 +130,40 @@ sub all_branches {
 package Branches;
 use JSON qw/decode_json/;
 use File::Spec;
-use constant { BRANCHES_FOLDER => '../source-data/data/branches', };
-# use constant { BRANCHES_FOLDER => 'source-data/data/branches', };
 
 sub new {
     my $class = shift;
-    my $num   = shift;
+    my $argv  = shift;
 
-    my $self = bless _setup_branches($num), $class;
+    my $branches = _setup_branches(
+        {   bank_code       => $argv->{bank_code},
+            branches_folder => $argv->{branches_folder},
+        }
+    );
+
+    my $self = bless $branches, $class;
 
     return $self;
 }
 
 sub _all_branches {
-    my $folder_path = File::Spec->catfile( BRANCHES_FOLDER, '*.json' );
-    my @paths       = glob($folder_path);
+    my $self = shift;
+    my $argv = shift;
+
+    my $branches_folder_path
+        = File::Spec->catfile( $argv->{branches_folder}, '*.json' );
+    my @paths = glob($branches_folder_path);
+
+    my $regex_4digit = qr/(?<bank_code>\d{4})/;
 
     my $branches;
     for my $file_path ( sort @paths ) {
-
-        $file_path =~ /(?<bank_code>\d{4})/;
-        my $bank_code = $+{bank_code};
-
         my $file = File->new($file_path);
-        $branches->{$bank_code} = decode_json( $file->read );
+
+        $file_path =~ /$regex_4digit/;
+
+        $branches->{ $+{bank_code} } = decode_json( $file->read );
+
     }
 
     return $branches;
@@ -119,10 +171,10 @@ sub _all_branches {
 }
 
 sub _setup_branches {
-    my $bank_code = shift;
+    my $argv = shift;
 
-    my $branches_file_path
-        = File::Spec->catfile( BRANCHES_FOLDER, "${bank_code}.json" );
+    my $branches_file_path = File::Spec->catfile( $argv->{branches_folder},
+        "$argv->{bank_code}.json" );
 
     my $file             = File->new($branches_file_path);
     my $branches_hashref = decode_json( $file->read );
@@ -142,14 +194,13 @@ sub _setup_branches {
 }
 
 package Bank;
-use constant { BANKS_JSON => '../source-data/data/banks.json', };
 use JSON qw/decode_json/;
 
 sub new {
-    my $class     = shift;
-    my $bank_code = shift;
+    my $class = shift;
+    my $argv  = shift;
 
-    my $bank_info = _setup_bank($bank_code);
+    my $bank_info = _setup_bank($argv);
 
     my $self = bless $bank_info, $class;
 
@@ -187,9 +238,10 @@ sub roma {
 }
 
 sub _setup_bank {
-    my $bank_code = shift;
+    my $argv = shift;
 
-    my $banks_json_path = File::Spec->canonpath(BANKS_JSON);
+    my $bank_code       = $argv->{bank_code};
+    my $banks_json_path = $argv->{banks_file};
 
     my $file       = File->new($banks_json_path);
     my $banks_info = decode_json( $file->read );
@@ -206,8 +258,10 @@ sub _setup_bank {
 }
 
 sub _all_banks {
-    my $banks_json_path = File::Spec->canonpath(BANKS_JSON);
-    my $data = File->new($banks_json_path);
+    my $self = shift;
+    my $argv = shift;
+
+    my $data = File->new( $argv->{banks_file} );
 
     my $banks_info = decode_json( $data->read );
 
@@ -263,7 +317,9 @@ use File::Spec;
 sub new {
     my $class = shift;
     my $file  = shift;
-    my $self  = bless { file => File::Spec->canonpath($file) }, $class;
+
+    my $self = bless { file => File::Spec->canonpath($file) }, $class;
+
     return $self;
 }
 
@@ -297,28 +353,17 @@ __END__
 Zengin::Perl - The perl implementation of ZenginCode.
 
 
-=head1 SETUP & SAMPLE
-
-    $ git clone git@github.com:sironekotoro/Zengin-Perl.git
-
-    $ cd Zengin-Perl
-
-    $ git submodule init
-
-    $ git submodule update
-
-    $ cd eg/
-
-    $ perl sample.pl
-
-
-
 =head1 SYNOPSIS
 
     use Zengin::Perl;
     binmode STDOUT, ":utf8";
 
-    my $zp = Zengin::Perl->new();
+    # Prepare the source-data in advance.
+    # source-data : https://github.com/zengin-code/source-data
+
+    my $zp = Zengin::Perl->new({
+        source_data_path => '/Users/sironekotoro/Desktop/source-data'
+    });
 
     # bank info
     my $bank = $zp->bank(1);

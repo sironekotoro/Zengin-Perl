@@ -2,5 +2,6 @@ Revision history for Perl extension Zengin-Perl
 
 {{$NEXT}}
 
+    - Change source-data to be obtained from outside.
     - original version
 

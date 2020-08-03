@@ -10,7 +10,17 @@ print $bank->name() . "\n";    # みずほ
 print $bank->hira() . "\n";    # みずほ
 print $bank->kana() . "\n";    # ミズホ
 print $bank->roma() . "\n";    # mizuho
-                               # branch info
+
+# banks
+my $banks = $zp->banks();
+while ( my ( $bank_code, $bank_info ) = each %{$banks} ) {
+    print "=" x 20 . "\n";
+    print "$bank_info->{code}" . "\n";
+    print "$bank_info->{roma}" . "\n";
+    print "=" x 20 . "\n";
+}
+
+# branch info
 my $branch = $zp->branch(1);
 print $branch->code() . "\n";    # 001
 print $branch->name() . "\n";    # 東京営業部

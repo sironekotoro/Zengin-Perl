@@ -2,6 +2,7 @@ Revision history for Perl extension Zengin-Perl
 
 {{$NEXT}}
 
+    - Add banks
     - Change source-data to be obtained from outside.
     - original version
 

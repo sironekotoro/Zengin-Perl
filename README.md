@@ -22,6 +22,14 @@ Zengin::Perl - The perl implementation of ZenginCode.
     print $bank->kana() . "\n"; # ミズホ
     print $bank->roma() . "\n"; # mizuho
 
+    # banks
+    my $banks = $zp->banks();
+    while ( my ( $bank_code, $bank_info ) = each %{$banks} ) {
+        print "=" x 20 . "\n";
+        print "$bank_info->{code}" . "\n";
+        print "$bank_info->{roma}" . "\n";
+        print "=" x 20 . "\n";
+    }
 
     # branch info
     my $branch = $zp->branch(1);

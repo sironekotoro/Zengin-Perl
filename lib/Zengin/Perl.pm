@@ -1,9 +1,9 @@
 package Zengin::Perl;
-use 5.010;
+use 5.014;
 use strict;
 use warnings;
 
-our $VERSION = "0.04";
+our $VERSION = "0.05";
 
 use Carp 1.50 qw/croak/;
 use JSON 4.01 qw/decode_json/;

@@ -201,79 +201,77 @@ sub _setup_branches {
 
 }
 
-package Bank;
-use JSON 4.01 qw/decode_json/;
+package Bank {
+    use JSON 4.01 qw/decode_json/;
+    use Mouse 2.5.10;
 
-sub new {
-    my $class = shift;
-    my $argv  = shift;
+    sub new {
+        my $class = shift;
+        my $argv  = shift;
 
-    my $bank_info = _setup_bank($argv);
+        my $bank_info = _setup_bank($argv);
 
-    my $self = bless $bank_info, $class;
+        my $self = bless $bank_info, $class;
 
-    return $self;
-}
-
-sub code {
-    my $self = shift;
-
-    return $self->{code};
-}
-
-sub name {
-    my $self = shift;
-
-    return $self->{name};
-}
-
-sub hira {
-    my $self = shift;
-
-    return $self->{hira};
-}
-
-sub kana {
-    my $self = shift;
-
-    return $self->{kana};
-}
-
-sub roma {
-    my $self = shift;
-
-    return $self->{roma};
-}
-
-sub _setup_bank {
-    my $argv = shift;
-
-    my $bank_code       = $argv->{bank_code};
-    my $banks_json_path = $argv->{banks_file};
-
-    my $file       = File->new($banks_json_path);
-    my $banks_info = decode_json( $file->read );
-
-    my $bank_info = $banks_info->{$bank_code};
-
-    if ( $banks_info->{$bank_code} ) {
-        return $bank_info;
-    }
-    else {
-        return {};
+        return $self;
     }
 
-}
+    has code => (
+        is  => "ro",
+        isa => "Int",
+    );
 
-sub _all_banks {
-    my $self = shift;
-    my $argv = shift;
+    has name => (
+        is  => "ro",
+        isa => "Str",
+    );
 
-    my $data = File->new( $argv->{banks_file} );
+    has hira => (
+        is  => "ro",
+        isa => "Str",
+    );
 
-    my $banks_info = decode_json( $data->read );
+    has kana => (
+        is  => "ro",
+        isa => "Str",
+    );
 
-    return $banks_info;
+    has roma => (
+        is  => "ro",
+        isa => "Str",
+    );
+
+    sub _setup_bank {
+        my $argv = shift;
+
+        my $bank_code       = $argv->{bank_code};
+        my $banks_json_path = $argv->{banks_file};
+
+        my $file       = File->new($banks_json_path);
+        my $banks_info = decode_json( $file->read );
+
+        my $bank_info = $banks_info->{$bank_code};
+
+        if ( $banks_info->{$bank_code} ) {
+            return $bank_info;
+        }
+        else {
+            return {};
+        }
+
+    }
+
+    sub _all_banks {
+        my $self = shift;
+        my $argv = shift;
+
+        my $data = File->new( $argv->{banks_file} );
+
+        my $banks_info = decode_json( $data->read );
+
+        return $banks_info;
+    }
+
 }
 
 package Branch {

@@ -33,11 +33,11 @@ Zengin::Perl - The perl implementation of ZenginCode.
 
     # branch info
     my $branch = $zp->branch(1);
-    print $branch->code . "\n"; # 001
-    print $branch->name . "\n"; # 東京営業部
-    print $branch->hira . "\n"; # とうきよう
-    print $branch->kana . "\n"; # トウキヨウ
-    print $branch->roma . "\n"; # toukiyou
+    print $branch->code() . "\n"; # 001
+    print $branch->name() . "\n"; # 東京営業部
+    print $branch->hira() . "\n"; # とうきよう
+    print $branch->kana() . "\n"; # トウキヨウ
+    print $branch->roma() . "\n"; # toukiyou
 
 
     # branch list

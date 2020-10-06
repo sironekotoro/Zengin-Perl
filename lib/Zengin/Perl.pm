@@ -272,6 +272,7 @@ package Bank {
         return $banks_info;
     }
 
+    __PACKAGE__->meta->make_immutable();
 }
 
 package Branch {
@@ -301,6 +302,8 @@ package Branch {
         is  => "ro",
         isa => "Str",
     );
+
+    __PACKAGE__->meta->make_immutable();
 }
 
 package File;

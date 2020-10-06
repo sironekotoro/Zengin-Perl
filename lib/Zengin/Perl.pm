@@ -5,7 +5,7 @@ use warnings;
 
 our $VERSION = "0.04";
 
-use Carp qw/croak/;
+use Carp 1.50 qw/croak/;
 
 sub new {
     my $class = shift;
@@ -136,8 +136,8 @@ sub all_branches {
 }
 
 package Branches;
-use JSON qw/decode_json/;
-use File::Spec;
+use JSON 4.01 qw/decode_json/;
+use File::Spec 3.74;
 
 sub new {
     my $class = shift;
@@ -202,7 +202,7 @@ sub _setup_branches {
 }
 
 package Bank;
-use JSON qw/decode_json/;
+use JSON 4.01 qw/decode_json/;
 
 sub new {
     my $class = shift;
@@ -319,8 +319,8 @@ sub roma {
 }
 
 package File;
-use Carp qw/croak/;
-use File::Spec;
+use Carp 1.50 qw/croak/;
+use File::Spec 3.74;
 
 sub new {
     my $class = shift;
@@ -433,7 +433,7 @@ Zengin::Perl - The perl implementation of ZenginCode.
 
 The perl implementation of ZenginCode.
 
-ZenginCode is datasets of bank codes and branch codes for japanese.
+ZenginCode is Datasets of bank codes and branch codes for japanese.
 
 =head1 LICENSE
 

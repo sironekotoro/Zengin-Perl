@@ -74,7 +74,7 @@ Zengin::Perl - The perl implementation of ZenginCode.
 
 The perl implementation of ZenginCode.
 
-ZenginCode is datasets of bank codes and branch codes for japanese.
+ZenginCode is Datasets of bank codes and branch codes for japanese.
 
 # LICENSE
 

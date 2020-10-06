@@ -276,46 +276,33 @@ sub _all_banks {
     return $banks_info;
 }
 
-package Branch;
+package Branch {
+    use Mouse 2.5.10;
 
-sub new {
-    my $class = shift;
+    has code => (
+        is  => "ro",
+        isa => "Int",
+    );
 
-    my $branch_info = shift;
+    has name => (
+        is  => "ro",
+        isa => "Str",
+    );
 
-    my $self = bless $branch_info, $class;
+    has hira => (
+        is  => "ro",
+        isa => "Str",
+    );
 
-    return $self;
-}
+    has kana => (
+        is  => "ro",
+        isa => "Str",
+    );
 
-sub code {
-    my $self = shift;
-
-    return $self->{code};
-}
-
-sub name {
-    my $self = shift;
-
-    return $self->{name};
-}
-
-sub hira {
-    my $self = shift;
-
-    return $self->{hira};
-}
-
-sub kana {
-    my $self = shift;
-
-    return $self->{kana};
-}
-
-sub roma {
-    my $self = shift;
-
-    return $self->{roma};
+    has roma => (
+        is  => "ro",
+        isa => "Str",
+    );
 }
 
 package File;

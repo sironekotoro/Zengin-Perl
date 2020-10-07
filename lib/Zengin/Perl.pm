@@ -27,6 +27,17 @@ package Zengin::Perl {
         lazy    => 1,
     );
 
+    has bank_code => (
+        is  => "rw",
+        isa => "Str",
+    );
+
+    has branches => (
+        is      => "ro",
+        builder => "_branches_builder",
+        lazy    => 1,
+    );
+
     sub _banks_file_builder {
         my $self = shift;
         File::Spec->catfile( $self->source_data_path, 'data', 'banks.json' );
@@ -37,6 +48,7 @@ package Zengin::Perl {
         File::Spec->catfile( $self->source_data_path, 'data', 'branches' );
     }
 
+
     sub bank {
         my $self = shift;
         my $num  = shift;
@@ -44,6 +56,7 @@ package Zengin::Perl {
         croak "The argument must be a number\n" unless $num =~ /\d+/;
 
         my $bank_code = sprintf( '%04d', $num );
+        $self->bank_code($bank_code);
 
         my $bank_info = _setup_bank(
             {   bank_code  => $bank_code,
@@ -53,26 +66,18 @@ package Zengin::Perl {
 
         my $bank = Bank->new($bank_info);
 
-        my $branches = Branches->new(
-            {   bank_code       => $bank_code,
+        return $bank;
+    }
+
+    sub _branches_builder {
+        my $self = shift;
+
+        return Branches->new(
+            {   bank_code       => $self->bank_code,
                 branches_folder => $self->branches_folder
             }
         );
 
-        $self->branches($branches);
-
-        return $bank;
-    }
-
-    sub branches {
-        my $self = shift;
-        my $argv = shift;
-
-        if ($argv) {
-            $self->{branches} = $argv;
-        }
-
-        return $self->{branches};
     }
 
     sub banks {

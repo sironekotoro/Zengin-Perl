@@ -1,161 +1,155 @@
-package Zengin::Perl;
-use 5.014;
-use strict;
-use warnings;
+package Zengin::Perl {
+    use 5.014;
+    use Mouse;
 
-our $VERSION = "0.05";
+    our $VERSION = "0.05";
 
-use Carp 1.50 qw/croak/;
-use JSON 4.01 qw/decode_json/;
+    use Carp 1.50 qw/croak/;
+    use JSON 4.01 qw/decode_json/;
 
-sub new {
-    my $class = shift;
-    my $argv  = shift;
-
-    unless ( $argv->{source_data_path} || -e $argv->{source_data_path} ) {
-        croak "'source_data_path' is required in the argument",;
-    }
-
-    my $self = bless {
-
-        banks_file => File::Spec->catfile(
-            $argv->{source_data_path},
-            'data', 'banks.json'
-        ),
-        branches_folder => File::Spec->catfile(
-            $argv->{source_data_path},
-            'data', 'branches'
-        ),
-
-    }, $class;
-
-    return $self;
-}
-
-sub banks_file {
-    my $self = shift;
-
-    return $self->{banks_file};
-}
-
-sub branches_folder {
-    my $self = shift;
-
-    return $self->{branches_folder};
-}
-
-sub bank {
-    my $self = shift;
-    my $num  = shift;
-
-    croak "The argument must be a number\n" unless $num =~ /\d+/;
-
-    my $bank_code = sprintf( '%04d', $num );
-
-    my $bank_info = _setup_bank(
-        {   bank_code  => $bank_code,
-            banks_file => $self->banks_file
-        }
+    has source_data_path => (
+        is       => "ro",
+        isa      => "Str",
+        required => 1,
     );
 
-    my $bank = Bank->new($bank_info);
-
-    my $branches = Branches->new(
-        {   bank_code       => $bank_code,
-            branches_folder => $self->branches_folder
-        }
+    has banks_file => (
+        is      => "ro",
+        isa     => "Str",
+        builder => "_banks_file_builder",
+        lazy    => 1,
     );
 
-    $self->branches($branches);
+    has branches_folder => (
+        is      => "ro",
+        isa     => "Str",
+        builder => "_branches_folder_builder",
+        lazy    => 1,
+    );
 
-    return $bank;
-}
-
-sub banks {
-    my $self = shift;
-
-    my $banks = Bank->_all_banks( { banks_file => $self->banks_file } );
-
-    return $banks;
-}
-
-sub branch {
-    my $self = shift;
-    my $num  = shift;
-
-    croak "The argument must be a number\n" unless $num =~ /\d+/;
-
-    my $branch_code = sprintf( '%03d', $num );
-
-    my $branch = $self->branches->{$branch_code};
-
-    return $branch;
-}
-
-sub branches {
-    my $self = shift;
-    my $argv = shift;
-
-    if ($argv) {
-        $self->{branches} = $argv;
+    sub _banks_file_builder {
+        my $self = shift;
+        File::Spec->catfile( $self->source_data_path, 'data', 'banks.json' );
     }
 
-    return $self->{branches};
-}
+    sub _branches_folder_builder {
+        my $self = shift;
+        File::Spec->catfile( $self->source_data_path, 'data', 'branches' );
+    }
 
-sub all_branches {
-    my $self = shift;
+    sub bank {
+        my $self = shift;
+        my $num  = shift;
 
-    my $banks = Bank->_all_banks( { banks_file => $self->banks_file } );
+        croak "The argument must be a number\n" unless $num =~ /\d+/;
 
-    my $branches
-        = Branches->_all_branches(
-        { branches_folder => $self->branches_folder } );
+        my $bank_code = sprintf( '%04d', $num );
 
-    my $all_branches = [];
-    while ( my ( $bank_code, $branch ) = each %{$branches} ) {
+        my $bank_info = _setup_bank(
+            {   bank_code  => $bank_code,
+                banks_file => $self->banks_file
+            }
+        );
 
-        # Exclude closed branches.
-        next unless $banks->{$bank_code};
+        my $bank = Bank->new($bank_info);
 
-        while ( my ( $branch_code, $branch_info ) = each %{$branch} ) {
-            push @{$all_branches}, {
-                bank_code => $banks->{$bank_code}->{code},
-                bank_name => $banks->{$bank_code}->{name},
-                bank_hira => $banks->{$bank_code}->{hira},
-                bank_kana => $banks->{$bank_code}->{kana},
-                bank_roma => $banks->{$bank_code}->{roma},
+        my $branches = Branches->new(
+            {   bank_code       => $bank_code,
+                branches_folder => $self->branches_folder
+            }
+        );
 
-                branch_code => $branch_code,
-                branch_name => $branch_info->{name},
-                branch_hira => $branch_info->{hira},
-                branch_kana => $branch_info->{kana},
-                branch_roma => $branch_info->{roma},
-            };
+        $self->branches($branches);
+
+        return $bank;
+    }
+
+    sub branches {
+        my $self = shift;
+        my $argv = shift;
+
+        if ($argv) {
+            $self->{branches} = $argv;
         }
+
+        return $self->{branches};
     }
 
-    return $all_branches;
-}
+    sub banks {
+        my $self = shift;
 
-sub _setup_bank {
-    my $argv = shift;
+        my $banks = Bank->_all_banks( { banks_file => $self->banks_file } );
 
-    my $bank_code       = $argv->{bank_code};
-    my $banks_json_path = $argv->{banks_file};
-
-    my $file       = File->new($banks_json_path);
-    my $banks_info = decode_json( $file->read );
-
-    my $bank_info = $banks_info->{$bank_code};
-
-    if ( $banks_info->{$bank_code} ) {
-        return $bank_info;
-    }
-    else {
-        return {};
+        return $banks;
     }
 
+    sub branch {
+        my $self = shift;
+        my $num  = shift;
+
+        croak "The argument must be a number\n" unless $num =~ /\d+/;
+
+        my $branch_code = sprintf( '%03d', $num );
+
+        my $branch = $self->branches->{$branch_code};
+
+        return $branch;
+    }
+
+    sub all_branches {
+        my $self = shift;
+
+        my $banks = Bank->_all_banks( { banks_file => $self->banks_file } );
+
+        my $branches
+            = Branches->_all_branches(
+            { branches_folder => $self->branches_folder } );
+
+        my $all_branches = [];
+        while ( my ( $bank_code, $branch ) = each %{$branches} ) {
+
+            # Exclude closed branches.
+            next unless $banks->{$bank_code};
+
+            while ( my ( $branch_code, $branch_info ) = each %{$branch} ) {
+                push @{$all_branches}, {
+                    bank_code => $banks->{$bank_code}->{code},
+                    bank_name => $banks->{$bank_code}->{name},
+                    bank_hira => $banks->{$bank_code}->{hira},
+                    bank_kana => $banks->{$bank_code}->{kana},
+                    bank_roma => $banks->{$bank_code}->{roma},
+
+                    branch_code => $branch_code,
+                    branch_name => $branch_info->{name},
+                    branch_hira => $branch_info->{hira},
+                    branch_kana => $branch_info->{kana},
+                    branch_roma => $branch_info->{roma},
+                };
+            }
+        }
+
+        return $all_branches;
+    }
+
+    sub _setup_bank {
+        my $argv = shift;
+
+        my $bank_code       = $argv->{bank_code};
+        my $banks_json_path = $argv->{banks_file};
+
+        my $file       = File->new($banks_json_path);
+        my $banks_info = decode_json( $file->read );
+
+        my $bank_info = $banks_info->{$bank_code};
+
+        if ( $banks_info->{$bank_code} ) {
+            return $bank_info;
+        }
+        else {
+            return {};
+        }
+
+    }
 }
 
 package Branches;

@@ -48,7 +48,6 @@ package Zengin::Perl {
         File::Spec->catfile( $self->source_data_path, 'data', 'branches' );
     }
 
-
     sub bank {
         my $self = shift;
         my $num  = shift;
@@ -232,25 +231,7 @@ package Bank {
         isa => "Int",
     );
 
-    has name => (
-        is  => "ro",
-        isa => "Str",
-    );
-
-    has hira => (
-        is  => "ro",
-        isa => "Str",
-    );
-
-    has kana => (
-        is  => "ro",
-        isa => "Str",
-    );
-
-    has roma => (
-        is  => "ro",
-        isa => "Str",
-    );
+    map { has $_ => ( is => 'ro', isa => 'Str' ) } qw (name hira kana roma);
 
     sub _all_banks {
         my $self = shift;
@@ -274,25 +255,8 @@ package Branch {
         isa => "Int",
     );
 
-    has name => (
-        is  => "ro",
-        isa => "Str",
-    );
+    map { has $_ => ( is => 'ro', isa => 'Str' ) } qw (name hira kana roma);
 
-    has hira => (
-        is  => "ro",
-        isa => "Str",
-    );
-
-    has kana => (
-        is  => "ro",
-        isa => "Str",
-    );
-
-    has roma => (
-        is  => "ro",
-        isa => "Str",
-    );
 
     __PACKAGE__->meta->make_immutable();
 }

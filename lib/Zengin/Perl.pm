@@ -76,10 +76,15 @@ package Zengin::Perl {
                 branches_folder => $self->branches_folder
             }
         );
-
     }
 
-    sub banks {
+    has banks => (
+        is      => "ro",
+        isa     => "HashRef",
+        builder => "_banks_builder",
+    );
+
+    sub _banks_builder {
         my $self = shift;
 
         my $banks = Bank->_all_banks( { banks_file => $self->banks_file } );
@@ -256,7 +261,6 @@ package Branch {
     );
 
     map { has $_ => ( is => 'ro', isa => 'Str' ) } qw (name hira kana roma);
-
 
     __PACKAGE__->meta->make_immutable();
 }

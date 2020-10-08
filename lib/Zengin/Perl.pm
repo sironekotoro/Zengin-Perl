@@ -2,7 +2,7 @@ package Zengin::Perl {
     use 5.014;
     use Mouse;
 
-    our $VERSION = "0.05";
+    our $VERSION = "0.06";
 
     use Carp 1.50 qw/croak/;
     use JSON 4.01 qw/decode_json/;
@@ -301,7 +301,7 @@ Zengin::Perl - The perl implementation of ZenginCode.
     });
 
     # bank info
-    my $bank = $zp->bank(1);
+    my $bank = $zp->bank( bank_code => 0001 );
     print $bank->code() . "\n"; # 0001
     print $bank->name() . "\n"; # みずほ
     print $bank->hira() . "\n"; # みずほ

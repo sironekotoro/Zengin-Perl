@@ -64,7 +64,7 @@
          "web" : "https://github.com/sironekotoro/Zengin-Perl"
       }
    },
-   "version" : "0.05",
+   "version" : "0.06",
    "x_contributors" : [
       "$GIT_AUTHOR_NAME <$GIT_AUTHOR_EMAIL>"
    ],

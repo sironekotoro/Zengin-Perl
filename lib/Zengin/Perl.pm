@@ -82,12 +82,17 @@ package Zengin::Perl {
     sub _banks_builder {
         my $self = shift;
 
-        my $banks = Bank->_all_banks( { banks_file => $self->banks_file } );
+        my $data  = File->new( $self->banks_file );
+        my $banks = decode_json( $data->read );
 
         my %banks = do {
             my %hash = ();
             while ( my ( $key, $value ) = each %{$banks} ) {
                 $hash{$key} = Bank->new($value);
+
+                $hash{$key}{_path}
+                    = File::Spec->catfile( $self->branches_folder,
+                    $value->{code} . '.json' );
             }
             %hash;
         };
@@ -110,7 +115,8 @@ package Zengin::Perl {
     sub all_branches {
         my $self = shift;
 
-        my $banks = Bank->_all_banks( { banks_file => $self->banks_file } );
+        my $data  = File->new( $self->banks_file );
+        my $banks = decode_json( $data->read );
 
         my $branches
             = Branches->_all_branches(
@@ -211,6 +217,7 @@ sub _setup_branches {
 }
 
 package Bank {
+    use Carp 1.50 qw/croak/;
     use JSON 4.01 qw/decode_json/;
     use Mouse 2.5.10;
 
@@ -221,15 +228,45 @@ package Bank {
 
     map { has $_ => ( is => 'ro', isa => 'Str' ) } qw (name hira kana roma);
 
-    sub _all_banks {
+    # has branch => (
+    #     is      => "rw",
+    #     builder => "_branch_builder",
+    #     lazy    => 1,
+    # );
+
+    sub branch {
         my $self = shift;
-        my $argv = shift;
+        my %arg  = @_;
 
-        my $data = File->new( $argv->{banks_file} );
+        croak "The argument must be a number\n"
+            unless $arg{branch_code} =~ /\d+/;
 
-        my $banks_hashref = decode_json( $data->read );
+        my $branch_code = sprintf( '%03d', $arg{branch_code} );
 
-        return $banks_hashref;
+        return $self->branches->{$branch_code};
+
+    }
+
+    has branches => (
+        is      => "ro",
+        builder => "_branches_builder",
+        lazy    => 1,
+    );
+
+    sub _branches_builder {
+        my $self = shift;
+
+        my $data  = File->new( $self->{_path} );
+        my $banks = decode_json( $data->read );
+
+        my %branches = do {
+            my %hash = ();
+            while ( my ( $key, $value ) = each %{$banks} ) {
+                $hash{$key} = Branch->new($value);
+            }
+            %hash;
+        };
+        return \%branches;
     }
 
     __PACKAGE__->meta->make_immutable();

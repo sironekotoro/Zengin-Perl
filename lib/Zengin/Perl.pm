@@ -38,6 +38,13 @@ package Zengin::Perl {
         lazy    => 1,
     );
 
+    has banks => (
+        is      => "ro",
+        isa     => "HashRef",
+        builder => "_banks_builder",
+        lazy    => 1,
+    );
+
     sub _banks_file_builder {
         my $self = shift;
         File::Spec->catfile( $self->source_data_path, 'data', 'banks.json' );
@@ -51,7 +58,6 @@ package Zengin::Perl {
     sub bank {
         my $self = shift;
 
-        # my $num  = shift;
         my %arg = @_;
 
         croak "The argument must be a number\n"
@@ -60,11 +66,7 @@ package Zengin::Perl {
         my $bank_code = sprintf( '%04d', $arg{bank_code} );
         $self->bank_code($bank_code);
 
-        my $bank_info = $self->banks->{$bank_code};
-
-        my $bank = Bank->new($bank_info);
-
-        return $bank;
+        return $self->banks->{$bank_code};
     }
 
     sub _branches_builder {
@@ -77,18 +79,19 @@ package Zengin::Perl {
         );
     }
 
-    has banks => (
-        is      => "ro",
-        isa     => "HashRef",
-        builder => "_banks_builder",
-    );
-
     sub _banks_builder {
         my $self = shift;
 
         my $banks = Bank->_all_banks( { banks_file => $self->banks_file } );
 
-        return $banks;
+        my %banks = do {
+            my %hash = ();
+            while ( my ( $key, $value ) = each %{$banks} ) {
+                $hash{$key} = Bank->new($value);
+            }
+            %hash;
+        };
+        return \%banks;
     }
 
     sub branch {
@@ -224,9 +227,9 @@ package Bank {
 
         my $data = File->new( $argv->{banks_file} );
 
-        my $banks_info = decode_json( $data->read );
+        my $banks_hashref = decode_json( $data->read );
 
-        return $banks_info;
+        return $banks_hashref;
     }
 
     __PACKAGE__->meta->make_immutable();
@@ -312,8 +315,8 @@ Zengin::Perl - The perl implementation of ZenginCode.
     my $banks = $zp->banks();
     while ( my ( $bank_code, $bank_info ) = each %{$banks} ) {
         print "=" x 20 . "\n";
-        print "$bank_info->{code}" . "\n";
-        print "$bank_info->{roma}" . "\n";
+        print $bank_info->{code} . "\n";
+        print $bank_info->{roma} . "\n";
         print "=" x 20 . "\n";
     }
 

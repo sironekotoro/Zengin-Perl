@@ -6,8 +6,8 @@ use Zengin::Perl;
 
 my $zp = Zengin::Perl->new( { source_data_path => 't/source-data' } );
 
-$zp->bank( bank_code => 0001 );
-my $branch = $zp->branch(1);
+my $bank = $zp->bank( bank_code => 0001 );
+my $branch = $bank->branch( branch_code => 001);
 
 is $branch->code(), '001';
 is $branch->name(), '東京営業部';

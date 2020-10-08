@@ -6,20 +6,27 @@ use Zengin::Perl;
 
 my $zp = Zengin::Perl->new( { source_data_path => 't/source-data' } );
 
-my $all_branches = $zp->all_branches();
+my @all_branches = ();
 
-my $branch = pop @{$all_branches};
+my $banks = $zp->banks();
+for my $bank_code ( sort keys %{$banks} ) {
+    my $bank = $banks->{$bank_code};
 
-is $branch->{bank_code}, '0001';
-is $branch->{bank_name}, 'みずほ';
-is $branch->{bank_hira}, 'みずほ';
-is $branch->{bank_kana}, 'ミズホ';
-is $branch->{bank_roma}, 'mizuho';
-is $branch->{branch_code}, '001';
-is $branch->{branch_name}, '東京営業部';
-is $branch->{branch_hira}, 'とうきよう';
-is $branch->{branch_kana}, 'トウキヨウ';
-is $branch->{branch_roma}, 'toukiyou';
+    my $branches = $bank->branches();
+
+    for my $branch_code ( sort keys %{$branches} ) {
+        my $branch = $branches->{$branch_code};
+        push @all_branches, $branch;
+    }
+}
+
+my $branch = pop @all_branches;
+
+is $branch->code, '001';
+is $branch->name, '東京営業部';
+is $branch->hira, 'とうきよう';
+is $branch->kana, 'トウキヨウ';
+is $branch->roma, 'toukiyou';
 
 done_testing;
 

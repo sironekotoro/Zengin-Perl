@@ -8,12 +8,8 @@ my $zp = Zengin::Perl->new( { source_data_path => 't/source-data' } );
 
 can_ok $zp , 'new';
 can_ok $zp , 'banks_file';
-can_ok $zp , 'branches_folder';
 can_ok $zp , 'bank';
 can_ok $zp , 'banks';
-can_ok $zp , 'branch';
-can_ok $zp , 'branches';
-can_ok $zp , 'all_branches';
 
 done_testing;
 

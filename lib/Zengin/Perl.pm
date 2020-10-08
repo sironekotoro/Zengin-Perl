@@ -57,11 +57,7 @@ package Zengin::Perl {
         my $bank_code = sprintf( '%04d', $num );
         $self->bank_code($bank_code);
 
-        my $bank_info = _setup_bank(
-            {   bank_code  => $bank_code,
-                banks_file => $self->banks_file
-            }
-        );
+        my $bank_info = $self->banks->{$bank_code};
 
         my $bank = Bank->new($bank_info);
 
@@ -140,25 +136,6 @@ package Zengin::Perl {
         return $all_branches;
     }
 
-    sub _setup_bank {
-        my $argv = shift;
-
-        my $bank_code       = $argv->{bank_code};
-        my $banks_json_path = $argv->{banks_file};
-
-        my $file       = File->new($banks_json_path);
-        my $banks_info = decode_json( $file->read );
-
-        my $bank_info = $banks_info->{$bank_code};
-
-        if ( $banks_info->{$bank_code} ) {
-            return $bank_info;
-        }
-        else {
-            return {};
-        }
-
-    }
 }
 
 package Branches;

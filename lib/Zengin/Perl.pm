@@ -2,7 +2,7 @@ package Zengin::Perl {
     use 5.014;
     use Mouse;
 
-    our $VERSION = "0.06";
+    our $VERSION = "0.07";
 
     use Carp 1.50 qw/croak/;
     use JSON 4.01 qw/decode_json/;

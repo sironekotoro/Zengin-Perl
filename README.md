@@ -15,7 +15,7 @@ Zengin::Perl - The perl implementation of ZenginCode.
     });
 
     # bank info
-    my $bank = $zp->bank(1);
+    my $bank = $zp->bank( bank_code => 0001 );
     print $bank->code() . "\n"; # 0001
     print $bank->name() . "\n"; # みずほ
     print $bank->hira() . "\n"; # みずほ

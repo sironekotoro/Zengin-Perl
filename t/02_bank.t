@@ -6,7 +6,7 @@ use Zengin::Perl;
 
 my $zp = Zengin::Perl->new( { source_data_path => 't/source-data' } );
 
-my $bank = $zp->bank(1);
+my $bank = $zp->bank( bank_code => 0001 );
 
 is $bank->code(), '0001';
 is $bank->name(), 'みずほ';

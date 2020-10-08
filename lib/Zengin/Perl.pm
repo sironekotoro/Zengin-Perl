@@ -50,11 +50,14 @@ package Zengin::Perl {
 
     sub bank {
         my $self = shift;
-        my $num  = shift;
 
-        croak "The argument must be a number\n" unless $num =~ /\d+/;
+        # my $num  = shift;
+        my %arg = @_;
 
-        my $bank_code = sprintf( '%04d', $num );
+        croak "The argument must be a number\n"
+            unless $arg{bank_code} =~ /\d+/;
+
+        my $bank_code = sprintf( '%04d', $arg{bank_code} );
         $self->bank_code($bank_code);
 
         my $bank_info = $self->banks->{$bank_code};

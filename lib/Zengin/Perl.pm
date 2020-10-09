@@ -1,11 +1,11 @@
 package Zengin::Perl {
     use 5.014;
+    use Carp 1.50 qw/croak/;
+    use JSON 4.01 qw/decode_json/;
     use Mouse;
 
     our $VERSION = "0.08";
 
-    use Carp 1.50 qw/croak/;
-    use JSON 4.01 qw/decode_json/;
 
     has source_data_path => (
         is       => "ro",

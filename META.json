@@ -46,7 +46,7 @@
             "File::Share" : "0.25",
             "File::Spec" : "3.74",
             "JSON" : "4.01",
-            "Mouse" : "2.5",
+            "Mouse" : "0",
             "perl" : "5.014"
          }
       },
@@ -68,7 +68,7 @@
          "web" : "https://github.com/sironekotoro/Zengin-Perl"
       }
    },
-   "version" : "0.08",
+   "version" : "0.09",
    "x_contributors" : [
       "$GIT_AUTHOR_NAME <$GIT_AUTHOR_EMAIL>"
    ],

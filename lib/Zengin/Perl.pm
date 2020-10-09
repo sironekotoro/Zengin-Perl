@@ -3,7 +3,7 @@ package Zengin::Perl {
     use Carp 1.50 qw/croak/;
     use File::Share 0.25 ':all';
     use JSON 4.01 qw/decode_json/;
-    use Mouse;
+    use Mouse v2.5.10;
 
     our $VERSION = "0.09";
 
@@ -35,13 +35,13 @@ package Zengin::Perl {
 
     sub _banks_file_builder {
         my $self = shift;
-        return dist_file( 'Zengin::Perl', 'data/banks.json' );
+        return dist_file( 'Zengin-Perl', 'data/banks.json' );
 
     }
 
     sub _branches_folder_builder {
         my $self = shift;
-        my $dir  = dist_dir('Zengin::Perl');
+        my $dir  = dist_dir('Zengin-Perl');
         return File::Spec->catfile( $dir, 'data', 'branches' );
     }
 
@@ -86,7 +86,7 @@ package Zengin::Perl {
 package Bank {
     use Carp 1.50 qw/croak/;
     use JSON 4.01 qw/decode_json/;
-    use Mouse;
+    use Mouse v2.5.10;
 
     has code => (
         is  => "ro",
@@ -135,7 +135,7 @@ package Bank {
 }
 
 package Branch {
-    use Mouse;
+    use Mouse v2.5.10;
 
     has code => (
         is  => "ro",
@@ -150,7 +150,7 @@ package Branch {
 package File {
     use Carp 1.50 qw/croak/;
     use File::Spec 3.74;
-    use Mouse;
+    use Mouse v2.5.10;
 
     has file => (
         is  => "ro",
@@ -188,12 +188,7 @@ Zengin::Perl - The perl implementation of ZenginCode.
     use Zengin::Perl;
     binmode STDOUT, ":utf8";
 
-    # Prepare the source-data in advance.
-    # source-data : https://github.com/zengin-code/source-data
-
-    my $zp = Zengin::Perl->new({
-        source_data_path => '/Users/sironekotoro/Desktop/source-data'
-    });
+    my $zp = Zengin::Perl->new();
 
     # bank info
     my $bank = $zp->bank( bank_code => 0001 );

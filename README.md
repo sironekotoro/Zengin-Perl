@@ -7,12 +7,7 @@ Zengin::Perl - The perl implementation of ZenginCode.
     use Zengin::Perl;
     binmode STDOUT, ":utf8";
 
-    # Prepare the source-data in advance.
-    # source-data : https://github.com/zengin-code/source-data
-
-    my $zp = Zengin::Perl->new({
-        source_data_path => '/Users/sironekotoro/Desktop/source-data'
-    });
+    my $zp = Zengin::Perl->new();
 
     # bank info
     my $bank = $zp->bank( bank_code => 0001 );

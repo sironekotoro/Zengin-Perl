@@ -3,9 +3,9 @@ package Zengin::Perl {
     use Carp 1.50 qw/croak/;
     use File::Share 0.25 ':all';
     use JSON 4.01 qw/decode_json/;
-    use Mouse;
+    use Mouse 2.5;
 
-    our $VERSION = "0.08";
+    our $VERSION = "0.09";
 
     has banks_file => (
         is      => "ro",
@@ -86,7 +86,7 @@ package Zengin::Perl {
 package Bank {
     use Carp 1.50 qw/croak/;
     use JSON 4.01 qw/decode_json/;
-    use Mouse 2.5.10;
+    use Mouse 2.5;
 
     has code => (
         is  => "ro",
@@ -135,7 +135,7 @@ package Bank {
 }
 
 package Branch {
-    use Mouse 2.5.10;
+    use Mouse 2.5;
 
     has code => (
         is  => "ro",
@@ -150,7 +150,7 @@ package Branch {
 package File {
     use Carp 1.50 qw/croak/;
     use File::Spec 3.74;
-    use Mouse 2.5.10;
+    use Mouse 2.5;
 
     has file => (
         is  => "ro",

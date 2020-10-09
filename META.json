@@ -42,7 +42,11 @@
       },
       "runtime" : {
          "requires" : {
-            "JSON" : "0",
+            "Carp" : "1.50",
+            "File::Share" : "0.25",
+            "File::Spec" : "3.74",
+            "JSON" : "4.01",
+            "Mouse" : "2.5",
             "perl" : "5.014"
          }
       },

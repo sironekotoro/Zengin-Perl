@@ -66,7 +66,7 @@ package Zengin::Perl {
     sub _banks_builder {
         my $self = shift;
 
-        my $data  = File->new( $self->banks_file );
+        my $data  = File->new( file => $self->banks_file );
         my $banks = decode_json( $data->read );
 
         my %banks = do {
@@ -122,7 +122,7 @@ package Bank {
     sub _branches_builder {
         my $self = shift;
 
-        my $data  = File->new( $self->_path );
+        my $data  = File->new( file => $self->_path );
         my $banks = decode_json( $data->read );
 
         my %branches = do {
@@ -156,20 +156,10 @@ package File {
     use File::Spec 3.74;
     use Mouse 2.5.10;
 
-    sub new {
-        my $class = shift;
-        my $file  = shift;
-
-        my $self = bless { file => File::Spec->canonpath($file) }, $class;
-
-        return $self;
-    }
-
-    sub file {
-        my $self = shift;
-
-        return $self->{file};
-    }
+    has file => (
+        is  => "ro",
+        isa => "Str",
+    );
 
     sub read {
         my $self = shift;

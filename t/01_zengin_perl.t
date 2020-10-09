@@ -4,7 +4,7 @@ use utf8;
 
 use Zengin::Perl;
 
-my $zp = Zengin::Perl->new( { source_data_path => 't/source-data' } );
+my $zp = Zengin::Perl->new();
 
 can_ok $zp , 'new';
 can_ok $zp , 'banks_file';

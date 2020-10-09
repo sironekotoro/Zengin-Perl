@@ -4,11 +4,7 @@ use utf8;
 
 use Zengin::Perl;
 
-my $zp = Zengin::Perl->new( { source_data_path => 't/source-data' } );
-
-# $zp->bank( bank_code => 0001 );
-# my $branches = $zp->branches();
-# my $branch = $branches->{'001'};
+my $zp = Zengin::Perl->new();
 
 my $bank = $zp->bank( bank_code => 0001 );
 my $branches = $bank->branches();

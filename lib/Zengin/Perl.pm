@@ -1,17 +1,11 @@
 package Zengin::Perl {
     use 5.014;
     use Carp 1.50 qw/croak/;
+    use File::Share 0.25 ':all';
     use JSON 4.01 qw/decode_json/;
     use Mouse;
 
     our $VERSION = "0.08";
-
-
-    has source_data_path => (
-        is       => "ro",
-        isa      => "Str",
-        required => 1,
-    );
 
     has banks_file => (
         is      => "ro",
@@ -41,12 +35,14 @@ package Zengin::Perl {
 
     sub _banks_file_builder {
         my $self = shift;
-        File::Spec->catfile( $self->source_data_path, 'data', 'banks.json' );
+        return dist_file( 'Zengin::Perl', 'data/banks.json' );
+
     }
 
     sub _branches_folder_builder {
         my $self = shift;
-        File::Spec->catfile( $self->source_data_path, 'data', 'branches' );
+        my $dir  = dist_dir('Zengin::Perl');
+        return File::Spec->catfile( $dir, 'data', 'branches' );
     }
 
     sub bank {
@@ -174,6 +170,7 @@ package File {
 
         return $data;
     }
+    __PACKAGE__->meta->make_immutable();
 };
 
 1;

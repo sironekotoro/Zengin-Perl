@@ -4,7 +4,7 @@ use utf8;
 
 use Zengin::Perl;
 
-my $zp = Zengin::Perl->new( { source_data_path => 't/source-data' } );
+my $zp = Zengin::Perl->new();
 
 my @all_branches = ();
 
@@ -20,7 +20,7 @@ for my $bank_code ( sort keys %{$banks} ) {
     }
 }
 
-my $branch = pop @all_branches;
+my $branch = $all_branches[0];
 
 is $branch->code, '001';
 is $branch->name, '東京営業部';

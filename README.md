@@ -2,6 +2,10 @@
 
 Zengin::Perl - The perl implementation of ZenginCode.
 
+# INSTALLATION
+
+    cpanm git@github.com:sironekotoro/Zengin-Perl.git
+
 # SYNOPSIS
 
     use Zengin::Perl;

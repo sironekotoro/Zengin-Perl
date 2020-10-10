@@ -2,7 +2,7 @@ requires 'Carp', '1.50';
 requires 'File::Share', '0.25';
 requires 'File::Spec', '3.74';
 requires 'JSON', '4.01';
-requires 'Mouse';
+requires 'Mouse', 'v2.5.10';
 requires 'perl', '5.014';
 
 on configure => sub {

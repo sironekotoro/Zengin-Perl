@@ -2,6 +2,7 @@ package Zengin::Perl {
     use 5.014;
     use Carp 1.50 qw/croak/;
     use File::Share 0.25 ':all';
+    use File::Spec 3.74;
     use JSON 4.01 qw/decode_json/;
     use Mouse v2.5.10;
 
@@ -182,6 +183,9 @@ __END__
 
 Zengin::Perl - The perl implementation of ZenginCode.
 
+=head1 INSTALLATION
+
+    cpanm git@github.com:sironekotoro/Zengin-Perl.git
 
 =head1 SYNOPSIS
 

@@ -1,0 +1,14 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+use utf8;
+use Zengin::Perl;
+binmode STDOUT, ":utf8";
+
+my $zp   = Zengin::Perl->new();
+my $bank = $zp->bank( bank_code => $ARGV[0] );
+printf( "銀行コード: %s\n",        $bank->code );
+printf( "銀行名: %s\n",           $bank->name );
+printf( "銀行名（ひらがな）: %s\n", $bank->hira );
+printf( "銀行名（カタカナ）: %s\n", $bank->kana );
+printf( "銀行名（ローマ字）: %s\n", $bank->roma );

@@ -6,6 +6,8 @@ package Zengin::Perl {
     use JSON 4.01 qw/decode_json/;
     use Mouse v2.5.10;
 
+    # use utf8;
+
     our $VERSION = "0.09";
 
     has banks_file => (
@@ -48,8 +50,7 @@ package Zengin::Perl {
 
     sub bank {
         my $self = shift;
-
-        my %arg = @_;
+        my %arg  = @_;
 
         croak "The argument must be a number\n"
             unless $arg{bank_code} =~ /\d+/;
@@ -78,6 +79,22 @@ package Zengin::Perl {
             %hash;
         };
         return \%banks;
+    }
+
+    sub search {
+        my $self = shift;
+        my @argv = @_;
+
+        my @result;
+        my $banks = $self->banks();
+
+        for my $code ( sort keys %{$banks} ) {
+            my $bank = $banks->{$code};
+            push @result, $bank
+                if $bank->name() =~ /$argv[0]/;
+        }
+
+        return \@result;
     }
 
     __PACKAGE__->meta->make_immutable();

@@ -1,5 +1,5 @@
 use strict;
-use Test::More;
+use Test::More 0.98;
 use Test::Perl::Critic 1.04;
 
 eval {
@@ -8,4 +8,4 @@ eval {
 };
 plan skip_all => "Test::Perl::Critic is not installed." if $@;
 
-all_critic_ok("lib");
+all_critic_ok("lib", "t");

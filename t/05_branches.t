@@ -6,9 +6,9 @@ use Zengin::Perl;
 
 my $zp = Zengin::Perl->new();
 
-my $bank = $zp->bank( bank_code => 0001 );
+my $bank     = $zp->bank( bank_code => '0001' );
 my $branches = $bank->branches();
-my $branch = $branches->{'001'};
+my $branch   = $branches->{'001'};
 
 is $branch->{code}, '001';
 is $branch->{name}, '東京営業部';

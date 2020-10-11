@@ -1,12 +1,11 @@
+use 5.014;
+
 package Zengin::Perl {
-    use 5.014;
     use Carp 1.50 qw/croak/;
     use File::Share 0.25 ':all';
     use File::Spec 3.74;
     use JSON 4.01 qw/decode_json/;
     use Mouse v2.5.10;
-
-    # use utf8;
 
     our $VERSION = "0.09";
 

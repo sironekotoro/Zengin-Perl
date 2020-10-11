@@ -52,6 +52,18 @@ The perl implementation of ZenginCode.
 
 ZenginCode is Datasets of bank codes and branch codes for japanese.
 
+# METHODS
+
+## bank
+
+## banks
+
+## branch
+
+## branches
+
+## search
+
 # LICENSE
 
 Copyright (C) sironekotoro.

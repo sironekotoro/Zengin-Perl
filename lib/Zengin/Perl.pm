@@ -23,11 +23,6 @@ package Zengin::Perl {
         lazy    => 1,
     );
 
-    has bank_code => (
-        is  => "rw",
-        isa => "Str",
-    );
-
     has banks => (
         is      => "ro",
         isa     => "HashRef",
@@ -38,7 +33,6 @@ package Zengin::Perl {
     sub _banks_file_builder {
         my $self = shift;
         return dist_file( 'Zengin-Perl', 'data/banks.json' );
-
     }
 
     sub _branches_folder_builder {
@@ -55,7 +49,6 @@ package Zengin::Perl {
             unless $arg{bank_code} =~ /\d+/;
 
         my $bank_code = sprintf( '%04d', $arg{bank_code} );
-        $self->bank_code($bank_code);
 
         return $self->banks->{$bank_code};
     }
@@ -248,6 +241,18 @@ Zengin::Perl - The perl implementation of ZenginCode.
 The perl implementation of ZenginCode.
 
 ZenginCode is Datasets of bank codes and branch codes for japanese.
+
+=head1 METHODS
+
+=head2 bank
+
+=head2 banks
+
+=head2 branch
+
+=head2 branches
+
+=head2 search
 
 =head1 LICENSE
 

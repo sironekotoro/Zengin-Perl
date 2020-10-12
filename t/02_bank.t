@@ -1,5 +1,6 @@
 use strict;
 use Test::More 0.98;
+use Test::Fatal 0.016;
 use utf8;
 
 use Zengin::Perl;
@@ -13,6 +14,15 @@ is $bank->name(), 'みずほ';
 is $bank->hira(), 'みずほ';
 is $bank->kana(), 'ミズホ';
 is $bank->roma(), 'mizuho';
+
+# Nonexistent bank codes
+like(
+    exception {
+        my $bank = $zp->bank( bank_code => '0002' )
+    },
+    qr/no corresponding bank code/,
+    "Nonexistent bank codes"
+);
 
 done_testing;
 

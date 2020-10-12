@@ -45,10 +45,13 @@ package Zengin::Perl {
         my $self = shift;
         my %arg  = @_;
 
-        croak "The argument must be a number\n"
-            unless $arg{bank_code} =~ /\d+/;
-
         my $bank_code = sprintf( '%04d', $arg{bank_code} );
+
+        croak "The argument must be a number.\n"
+            unless $bank_code =~ /\d+/;
+
+        croak "There is no corresponding bank code.\n"
+            unless exists $self->banks->{$bank_code};
 
         return $self->banks->{$bank_code};
     }
@@ -110,10 +113,13 @@ package Bank {
         my $self = shift;
         my %arg  = @_;
 
-        croak "The argument must be a number\n"
+        my $branch_code = sprintf( '%03d', $arg{branch_code} );
+
+        croak "The argument must be a number.\n"
             unless $arg{branch_code} =~ /\d+/;
 
-        my $branch_code = sprintf( '%03d', $arg{branch_code} );
+        croak "There is no corresponding branch code.\n"
+            unless exists $self->branches->{$branch_code};
 
         return $self->branches->{$branch_code};
 

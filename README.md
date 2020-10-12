@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.com/sironekotoro/Zengin-Perl.svg?branch=master)](https://travis-ci.com/sironekotoro/Zengin-Perl)
 # NAME
 
 Zengin::Perl - The perl implementation of ZenginCode.

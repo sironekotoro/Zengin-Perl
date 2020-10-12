@@ -1,5 +1,5 @@
 name = "Zengin-Perl"
-badges = ["travis-ci.com"]
+badges = ["travis-ci.org"]
 module_maker="ModuleBuildTiny"
 static_install = "auto"
 script_files = ['bin/*', 'source-data/*']

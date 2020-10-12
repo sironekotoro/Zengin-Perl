@@ -1,4 +1,5 @@
 requires 'Carp', '1.50';
+requires 'Encode';
 requires 'File::Share', '0.25';
 requires 'File::Spec', '3.74';
 requires 'JSON', '4.01';

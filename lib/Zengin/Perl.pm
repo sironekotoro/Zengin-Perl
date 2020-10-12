@@ -6,6 +6,8 @@ package Zengin::Perl {
     use File::Spec 3.74;
     use JSON 4.01 qw/decode_json/;
     use Mouse v2.5.10;
+    use Mouse::Util::TypeConstraints;
+    use Smart::Args 0.14;
 
     our $VERSION = "0.09";
 
@@ -41,14 +43,12 @@ package Zengin::Perl {
         return File::Spec->catfile( $dir, 'data', 'branches' );
     }
 
+    subtype 'bank_code' => as 'Int' => where { length($_) == 4 }
+    => message {"This number($_) is not bank code(4-digit)."};
+
     sub bank {
-        my $self = shift;
-        my %arg  = @_;
-
-        my $bank_code = sprintf( '%04d', $arg{bank_code} );
-
-        croak "The argument must be a number.\n"
-            unless $bank_code =~ /\d+/;
+        args my $self     => { is  => 'Zengin::Perl' },
+            my $bank_code => { isa => 'bank_code' };
 
         croak "There is no corresponding bank code.\n"
             unless exists $self->banks->{$bank_code};
@@ -100,6 +100,8 @@ package Bank {
     use Carp 1.50 qw/croak/;
     use JSON 4.01 qw/decode_json/;
     use Mouse v2.5.10;
+    use Mouse::Util::TypeConstraints;
+    use Smart::Args 0.14;
 
     has code => (
         is  => "ro",
@@ -109,14 +111,12 @@ package Bank {
     map { has $_ => ( is => 'ro', isa => 'Str' ) }
         qw (name hira kana roma _path);
 
+    subtype 'branch_code' => as 'Int' => where { length($_) == 3 }
+    => message {"This number($_) is not branch code(3-digit)."};
+
     sub branch {
-        my $self = shift;
-        my %arg  = @_;
-
-        my $branch_code = sprintf( '%03d', $arg{branch_code} );
-
-        croak "The argument must be a number.\n"
-            unless $arg{branch_code} =~ /\d+/;
+        args my $self       => { is  => 'Bank' },
+            my $branch_code => { isa => 'branch_code' };
 
         croak "There is no corresponding branch code.\n"
             unless exists $self->branches->{$branch_code};

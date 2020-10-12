@@ -49,11 +49,14 @@
             "File::Spec" : "3.74",
             "JSON" : "4.01",
             "Mouse" : "v2.5.10",
+            "Mouse::Util::TypeConstraints" : "0",
+            "Smart::Args" : "0.14",
             "perl" : "5.014"
          }
       },
       "test" : {
          "requires" : {
+            "Test::Fatal" : "0.016",
             "Test::More" : "0.98"
          }
       }

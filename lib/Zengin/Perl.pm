@@ -4,6 +4,7 @@ package Zengin::Perl {
     use Carp 1.50 qw/croak/;
     use File::Share 0.25 ':all';
     use File::Spec 3.74;
+    use File::Slurp 9999.32 qw/read_file/;
     use JSON 4.01 qw/decode_json/;
     use Mouse v2.5.10;
     use Mouse::Util::TypeConstraints;
@@ -59,8 +60,7 @@ package Zengin::Perl {
     sub _banks_builder {
         my $self = shift;
 
-        my $data  = File->new( file => $self->banks_file );
-        my $banks = decode_json( $data->read );
+        my $banks = decode_json( read_file( $self->banks_file ) );
 
         my %banks = do {
             my %hash = ();
@@ -98,6 +98,7 @@ package Zengin::Perl {
 
 package Bank {
     use Carp 1.50 qw/croak/;
+    use File::Slurp 9999.32 qw/read_file/;
     use JSON 4.01 qw/decode_json/;
     use Mouse v2.5.10;
     use Mouse::Util::TypeConstraints;
@@ -134,8 +135,7 @@ package Bank {
     sub _branches_builder {
         my $self = shift;
 
-        my $data  = File->new( file => $self->_path );
-        my $banks = decode_json( $data->read );
+        my $banks = decode_json( read_file( $self->_path ) );
 
         my %branches = do {
             my %hash = ();
@@ -152,6 +152,7 @@ package Bank {
 
 package Branch {
     use Mouse v2.5.10;
+    use Smart::Args 0.14;
 
     has code => (
         is  => "ro",
@@ -162,32 +163,6 @@ package Branch {
 
     __PACKAGE__->meta->make_immutable();
 }
-
-package File {
-    use Carp 1.50 qw/croak/;
-    use File::Spec 3.74;
-    use Mouse v2.5.10;
-
-    has file => (
-        is  => "ro",
-        isa => "Str",
-    );
-
-    sub read {
-        my $self = shift;
-
-        open my $FH, '<', $self->file or croak "READ_ERR:$self->{file}";
-        my $data;
-        {
-            local $/;
-            $data = <$FH>;
-        }
-        close $FH;
-
-        return $data;
-    }
-    __PACKAGE__->meta->make_immutable();
-};
 
 1;
 __END__

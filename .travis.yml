@@ -16,4 +16,4 @@ matrix:
     - perl: "5.30"
 
 script:
-  - prove -lvr t
+  - prove -lvr t/

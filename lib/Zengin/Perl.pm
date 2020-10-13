@@ -10,7 +10,7 @@ package Zengin::Perl {
     use Mouse::Util::TypeConstraints;
     use Smart::Args 0.14;
 
-    our $VERSION = "0.09";
+    our $VERSION = "0.10";
 
     has banks_file => (
         is      => "ro",
@@ -34,13 +34,11 @@ package Zengin::Perl {
     );
 
     sub _banks_file_builder {
-        my $self = shift;
         return dist_file( 'Zengin-Perl', 'data/banks.json' );
     }
 
     sub _branches_folder_builder {
-        my $self = shift;
-        my $dir  = dist_dir('Zengin-Perl');
+        my $dir = dist_dir('Zengin-Perl');
         return File::Spec->catfile( $dir, 'data', 'branches' );
     }
 
@@ -135,11 +133,11 @@ package Bank {
     sub _branches_builder {
         my $self = shift;
 
-        my $banks = decode_json( read_file( $self->_path ) );
+        my $branches = decode_json( read_file( $self->_path ) );
 
         my %branches = do {
             my %hash = ();
-            while ( my ( $key, $value ) = each %{$banks} ) {
+            while ( my ( $key, $value ) = each %{$branches} ) {
                 $hash{$key} = Branch->new($value);
             }
             %hash;
@@ -152,7 +150,6 @@ package Bank {
 
 package Branch {
     use Mouse v2.5.10;
-    use Smart::Args 0.14;
 
     has code => (
         is  => "ro",

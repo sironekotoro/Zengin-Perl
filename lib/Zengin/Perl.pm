@@ -58,7 +58,8 @@ package Zengin::Perl {
     sub _banks_builder {
         my $self = shift;
 
-        my $banks = decode_json( read_file( $self->banks_file ) );
+        my $file  = read_file( $self->banks_file );
+        my $banks = decode_json($file);
 
         my %banks = do {
             my %hash = ();
@@ -133,7 +134,8 @@ package Bank {
     sub _branches_builder {
         my $self = shift;
 
-        my $branches = decode_json( read_file( $self->_path ) );
+        my $file     = read_file( $self->_path );
+        my $branches = decode_json($file);
 
         my %branches = do {
             my %hash = ();

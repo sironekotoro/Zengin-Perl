@@ -76,9 +76,6 @@
       }
    },
    "version" : "0.10",
-   "x_contributors" : [
-      "$GIT_AUTHOR_NAME <$GIT_AUTHOR_EMAIL>"
-   ],
    "x_serialization_backend" : "JSON::PP version 4.05",
    "x_static_install" : 1
 }

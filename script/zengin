@@ -11,17 +11,41 @@ chomp $ARGV[0];
 
 my $zp = Zengin::Perl->new();
 
-if ( $ARGV[0] =~ /\d+/ ) {
-    my $bank = $zp->bank( bank_code => $ARGV[0] );
-    printf( "銀行コード: %s\n",             $bank->code );
-    printf( "銀行名: %s\n",                   $bank->name );
-    printf( "銀行名（ひらがな）: %s\n", $bank->hira );
-    printf( "銀行名（カタカナ）: %s\n", $bank->kana );
-    printf( "銀行名（ローマ字）: %s\n", $bank->roma );
+if ( scalar @ARGV == 2 ) {
+
+    my $bank_name   = decode_utf8( $ARGV[0] );
+    my $branch_name = decode_utf8( $ARGV[1] );
+
+    my $search_result = $zp->search($bank_name);
+    for my $bank ( @{$search_result} ) {
+        my $branches = $bank->branches();
+
+        for my $code ( sort keys %{$branches} ) {
+            my $branch = $branches->{$code};
+            next if $branch->name !~ /$branch_name/;
+
+            printf( "%s: %s %s: %s\n",
+                $bank->code, $bank->name, $branch->code, $branch->name );
+
+        }
+
+    }
+
 }
 else {
-    my $search_result = $zp->search( decode_utf8( $ARGV[0] ) );
-    for my $bank ( @{$search_result} ) {
-        printf( "%s: %s\n", $bank->code, $bank->name );
+
+    if ( $ARGV[0] =~ /\d+/ ) {
+        my $bank = $zp->bank( bank_code => $ARGV[0] );
+        printf( "銀行コード: %s\n",             $bank->code );
+        printf( "銀行名: %s\n",                   $bank->name );
+        printf( "銀行名（ひらがな）: %s\n", $bank->hira );
+        printf( "銀行名（カタカナ）: %s\n", $bank->kana );
+        printf( "銀行名（ローマ字）: %s\n", $bank->roma );
+    }
+    else {
+        my $search_result = $zp->search( decode_utf8( $ARGV[0] ) );
+        for my $bank ( @{$search_result} ) {
+            printf( "%s: %s\n", $bank->code, $bank->name );
+        }
     }
 }

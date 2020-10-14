@@ -15,7 +15,7 @@ Zengin::Perl - The perl implementation of ZenginCode.
     my $zp = Zengin::Perl->new();
 
     # bank info
-    my $bank = $zp->bank( bank_code => 0001 );
+    my $bank = $zp->bank( bank_code => '0001' );
     print $bank->code() . "\n";    # 0001
     print $bank->name() . "\n";    # みずほ
     print $bank->hira() . "\n";    # みずほ
@@ -32,8 +32,8 @@ Zengin::Perl - The perl implementation of ZenginCode.
     }
 
     # branch info
-    $bank = $zp->bank( bank_code => 0001 );
-    my $branch = $bank->branch( branch_code => 001 );
+    $bank = $zp->bank( bank_code => '0001' );
+    my $branch = $bank->branch( branch_code => '001' );
     print $branch->code() . "\n";    # 001
     print $branch->name() . "\n";    # 東京営業部
     print $branch->hira() . "\n";    # とうきよう
@@ -41,7 +41,7 @@ Zengin::Perl - The perl implementation of ZenginCode.
     print $branch->roma() . "\n";    # toukiyou
 
     # branch list
-    $bank = $zp->bank( bank_code => 0001 );
+    $bank = $zp->bank( bank_code => '0001' );
     my $branches = $bank->branches();
     while ( my ( $branch_code, $branch_info ) = each %{$branches} ) {
         print $branch_code , ':', $branch_info->roma . "\n";

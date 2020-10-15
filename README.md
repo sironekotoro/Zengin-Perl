@@ -57,7 +57,15 @@ ZenginCode is Datasets of bank codes and branch codes for japanese.
 
 ## bank
 
+    my $bank = $zp->bank(bank_code => '0001');
+
+    return Bank object. bank_code is Required.
+
 ## banks
+
+    my $bank = $zp->banks();
+
+    return HashRef. key is bank_code, value is Bank object.
 
 ## branch
 

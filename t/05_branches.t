@@ -1,5 +1,5 @@
 use strict;
-use Test::More 0.98;
+use Test::More;
 use Test::Fatal 0.016;
 use utf8;
 

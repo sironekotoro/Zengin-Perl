@@ -1,5 +1,5 @@
 use strict;
-use Test::More 0.98;
+use Test::More;
 use utf8;
 
 use Zengin::Perl;

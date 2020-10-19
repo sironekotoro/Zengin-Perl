@@ -1,9 +1,9 @@
 use 5.014;
 
 package Zengin::Perl {
-    use Carp 1.50 qw/croak/;
+    use Carp;
     use File::Share 0.25 ':all';
-    use File::Spec 3.74;
+    use File::Spec;
     use File::Slurp 9999.32 qw/read_file/;
     use JSON 4.01 qw/decode_json/;
     use Mouse v2.5.10;
@@ -96,7 +96,7 @@ package Zengin::Perl {
 }
 
 package Bank {
-    use Carp 1.50 qw/croak/;
+    use Carp;
     use File::Slurp 9999.32 qw/read_file/;
     use JSON 4.01 qw/decode_json/;
     use Mouse v2.5.10;

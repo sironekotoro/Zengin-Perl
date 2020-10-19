@@ -1,4 +1,4 @@
-use 5.014;
+use 5.010;
 
 package Zengin::Perl {
     use Carp;

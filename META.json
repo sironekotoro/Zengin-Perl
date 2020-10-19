@@ -44,11 +44,9 @@
       },
       "runtime" : {
          "requires" : {
-            "Carp" : "1.50",
             "Encode" : "0",
             "File::Share" : "0.25",
             "File::Slurp" : "9999.32",
-            "File::Spec" : "3.74",
             "JSON" : "4.01",
             "Mouse" : "v2.5.10",
             "Mouse::Util::TypeConstraints" : "0",
@@ -59,7 +57,7 @@
       "test" : {
          "requires" : {
             "Test::Fatal" : "0.016",
-            "Test::More" : "0.98"
+            "Test::More" : "0"
          }
       }
    },

@@ -1,8 +1,6 @@
-requires 'Carp', '1.50';
 requires 'Encode';
 requires 'File::Share', '0.25';
 requires 'File::Slurp', '9999.32';
-requires 'File::Spec', '3.74';
 requires 'JSON', '4.01';
 requires 'Mouse', 'v2.5.10';
 requires 'Mouse::Util::TypeConstraints';
@@ -15,7 +13,7 @@ on configure => sub {
 
 on test => sub {
     requires 'Test::Fatal', '0.016';
-    requires 'Test::More', '0.98';
+    requires 'Test::More';
 };
 
 on develop => sub {

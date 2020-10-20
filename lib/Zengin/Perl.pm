@@ -238,6 +238,12 @@ ZenginCode is Datasets of bank codes and branch codes for japanese.
 
 =head2 branch
 
+    my $bank   = $zp->bank(bank_code => '0001');
+    my $branch = $bank->branch( branch_code => '001' );
+
+    return HashRef. key is branch_code, value is Branch object.
+
+
 =head2 branches
 
 =head2 search

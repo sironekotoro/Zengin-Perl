@@ -16,6 +16,10 @@ if ( scalar @ARGV == 2 ) {
     my $bank_name   = decode_utf8( $ARGV[0] );
     my $branch_name = decode_utf8( $ARGV[1] );
 
+    $bank_name   =~ s/[A-Za-z]/[Ａ-Ｚａ-ｚ]/g;
+    $branch_name =~ s/[A-Za-z1-9]/[Ａ-Ｚａ-ｚ一-九]/g;
+    $branch_name =~ s/0/〇/g;
+
     my $search_result = $zp->search($bank_name);
     for my $bank ( @{$search_result} ) {
         my $branches = $bank->branches();

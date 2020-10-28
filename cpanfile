@@ -2,6 +2,7 @@ requires 'Encode';
 requires 'File::Share', '0.25';
 requires 'File::Slurp', '9999.32';
 requires 'JSON', '4.01';
+requires 'Lingua::JA::Regular::Unicode', '0.13';
 requires 'Mouse', 'v2.5.10';
 requires 'Mouse::Util::TypeConstraints';
 requires 'Smart::Args', '0.14';

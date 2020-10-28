@@ -3,11 +3,10 @@ use strict;
 use warnings;
 use utf8;
 use Encode qw/decode_utf8/;
+use Lingua::JA::Regular::Unicode 0.13;
 binmode STDOUT, ":utf8";
 
 use Zengin::Perl;
-
-chomp $ARGV[0];
 
 my $zp = Zengin::Perl->new();
 
@@ -16,9 +15,9 @@ if ( scalar @ARGV == 2 ) {
     my $bank_name   = decode_utf8( $ARGV[0] );
     my $branch_name = decode_utf8( $ARGV[1] );
 
-    $bank_name   =~ s/[A-Za-z]/[Ａ-Ｚａ-ｚ]/g;
-    $branch_name =~ s/[A-Za-z1-9]/[Ａ-Ｚａ-ｚ一-九]/g;
-    $branch_name =~ s/0/〇/g;
+    $bank_name = alnum_h2z($bank_name);
+    $branch_name = alnum_h2z($branch_name);
+    $branch_name =~ tr/０１２３４５６７８９/〇一二三四五六七八九/;
 
     my $search_result = $zp->search($bank_name);
     for my $bank ( @{$search_result} ) {
@@ -47,7 +46,10 @@ else {
         printf( "銀行名（ローマ字）: %s\n", $bank->roma );
     }
     else {
-        my $search_result = $zp->search( decode_utf8( $ARGV[0] ) );
+        my $bank_name = decode_utf8( $ARGV[0] );
+        $bank_name = alnum_h2z($bank_name);
+        my $search_result = $zp->search($bank_name);
+
         for my $bank ( @{$search_result} ) {
             printf( "%s: %s\n", $bank->code, $bank->name );
         }

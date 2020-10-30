@@ -15,9 +15,10 @@ if ( scalar @ARGV == 2 ) {
     my $bank_name   = decode_utf8( $ARGV[0] );
     my $branch_name = decode_utf8( $ARGV[1] );
 
-    $bank_name = alnum_h2z($bank_name);
+    $bank_name   = alnum_h2z($bank_name);
     $branch_name = alnum_h2z($branch_name);
-    $branch_name =~ tr/０１２３４５６７８９/〇一二三四五六七八九/;
+    $branch_name
+        =~ tr/０１２３４５６７８９/〇一二三四五六七八九/;
 
     my $search_result = $zp->search($bank_name);
     for my $bank ( @{$search_result} ) {
@@ -35,7 +36,7 @@ if ( scalar @ARGV == 2 ) {
     }
 
 }
-else {
+elsif ( scalar @ARGV == 1 ) {
 
     if ( $ARGV[0] =~ /\d+/ ) {
         my $bank = $zp->bank( bank_code => $ARGV[0] );
@@ -54,4 +55,14 @@ else {
             printf( "%s: %s\n", $bank->code, $bank->name );
         }
     }
+}
+else {
+    print "GETTING STARTED\n";
+    print "\t# 引数が1つ：銀行検索\n";
+    print "\t% zengin みずほ\n";
+    print "\t% zengin 0001\n";
+    print "\n";
+    print "\t# 引数が2つ：銀行ごとの支店検索\n";
+    print "\t% zengin みずほ 東京\n";
+    print "\n";
 }

@@ -63,6 +63,7 @@ elsif ( $argv_count == 2 ) {
                 $bank->code, $bank->name, $branch->code, $branch->name );
         }
     }
-}else{
+}
+else {
     print $help;
 }

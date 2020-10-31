@@ -10,13 +10,44 @@ use Zengin::Perl;
 
 my $zp = Zengin::Perl->new();
 
-if ( scalar @ARGV == 2 ) {
+my $argv_count  = scalar @ARGV;
+my $first_argv  = decode_utf8( $ARGV[0] );
+my $second_argv = decode_utf8( $ARGV[1] );
 
-    my $bank_name   = decode_utf8( $ARGV[0] );
-    my $branch_name = decode_utf8( $ARGV[1] );
+my $help = << "EOS";
+GETTING STARTED
+  # 引数が1つ：銀行検索
+    zengin みずほ
+    zengin 0001
 
-    $bank_name   = alnum_h2z($bank_name);
-    $branch_name = alnum_h2z($branch_name);
+  # 引数が2つ：銀行ごとの支店検索
+    zengin みずほ 東京
+EOS
+
+if ( $argv_count == 0 ) {
+    print $help;
+
+}
+elsif ( $argv_count == 1 && $first_argv =~ /\d+/ ) {
+    my $bank = $zp->bank( bank_code => sprintf( "%04d", $ARGV[0] ) );
+    printf( "銀行コード: %s\n",             $bank->code );
+    printf( "銀行名: %s\n",                   $bank->name );
+    printf( "銀行名（ひらがな）: %s\n", $bank->hira );
+    printf( "銀行名（カタカナ）: %s\n", $bank->kana );
+    printf( "銀行名（ローマ字）: %s\n", $bank->roma );
+}
+elsif ( $argv_count == 1 && $first_argv =~ /\w+/ ) {
+    my $bank_name = alnum_h2z($first_argv);
+
+    my $search_result = $zp->search($bank_name);
+
+    for my $bank ( @{$search_result} ) {
+        printf( "%s: %s\n", $bank->code, $bank->name );
+    }
+}
+elsif ( $argv_count == 2 ) {
+    my $bank_name   = alnum_h2z($first_argv);
+    my $branch_name = alnum_h2z($second_argv);
     $branch_name
         =~ tr/０１２３４５６７８９/〇一二三四五六七八九/;
 
@@ -30,39 +61,8 @@ if ( scalar @ARGV == 2 ) {
 
             printf( "%s: %s %s: %s\n",
                 $bank->code, $bank->name, $branch->code, $branch->name );
-
-        }
-
-    }
-
-}
-elsif ( scalar @ARGV == 1 ) {
-
-    if ( $ARGV[0] =~ /\d+/ ) {
-        my $bank = $zp->bank( bank_code => $ARGV[0] );
-        printf( "銀行コード: %s\n",             $bank->code );
-        printf( "銀行名: %s\n",                   $bank->name );
-        printf( "銀行名（ひらがな）: %s\n", $bank->hira );
-        printf( "銀行名（カタカナ）: %s\n", $bank->kana );
-        printf( "銀行名（ローマ字）: %s\n", $bank->roma );
-    }
-    else {
-        my $bank_name = decode_utf8( $ARGV[0] );
-        $bank_name = alnum_h2z($bank_name);
-        my $search_result = $zp->search($bank_name);
-
-        for my $bank ( @{$search_result} ) {
-            printf( "%s: %s\n", $bank->code, $bank->name );
         }
     }
-}
-else {
-    print "GETTING STARTED\n";
-    print "\t# 引数が1つ：銀行検索\n";
-    print "\t% zengin みずほ\n";
-    print "\t% zengin 0001\n";
-    print "\n";
-    print "\t# 引数が2つ：銀行ごとの支店検索\n";
-    print "\t% zengin みずほ 東京\n";
-    print "\n";
+}else{
+    print $help;
 }

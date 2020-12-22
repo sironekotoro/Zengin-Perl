@@ -10,7 +10,7 @@ package Zengin::Perl {
     use Mouse::Util::TypeConstraints;
     use Smart::Args 0.14;
 
-    our $VERSION = "0.10.20201212";
+    our $VERSION = "0.10.20201221";
 
     has banks_file => (
         is      => "ro",

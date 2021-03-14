@@ -36,6 +36,12 @@ has banks => (
     lazy    => 1,
 );
 
+method last_update(){
+    my (undef, undef, $last_update) = split /\./, $VERSION;
+
+    return $last_update;
+}
+
 method _banks_file_builder() {
 
     return dist_file( ref $self, 'data/banks.json' );
@@ -91,7 +97,6 @@ method bank_code_search(:$bank_code) {
 
     return $self->bank(bank_code => $bank_code);
 }
-
 
 __PACKAGE__->meta->make_immutable();
 

@@ -4,9 +4,7 @@ use strict;
 use warnings;
 use Moo 2.004004;
 
-has code => ( is => "ro", );
-
-map { has $_ => ( is => 'ro' ) } qw (name hira kana roma);
+map { has $_ => ( is => 'ro' ) } qw (code name hira kana roma);
 
 __PACKAGE__->meta->make_immutable();
 

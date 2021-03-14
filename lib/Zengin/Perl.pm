@@ -47,13 +47,6 @@ method _branches_folder_builder() {
     return File::Spec->catfile( $dir, 'data', 'branches' );
 }
 
-method bank(:$bank_code) {
-    croak "There is no corresponding bank code.\n"
-        unless exists $self->banks->{$bank_code};
-
-    return $self->banks->{$bank_code};
-}
-
 method _banks_builder() {
     my $file  = read_file( $self->banks_file );
     my $banks = decode_json($file);
@@ -73,7 +66,14 @@ method _banks_builder() {
     return \%banks;
 }
 
-method bank_search(:$bank_name) {
+method bank(:$bank_code) {
+    croak "There is no corresponding bank code.\n"
+        unless exists $self->banks->{$bank_code};
+
+    return $self->banks->{$bank_code};
+}
+
+method bank_name_search(:$bank_name) {
 
     my $banks = $self->banks();
     my @result = ();
@@ -85,6 +85,11 @@ method bank_search(:$bank_name) {
     }
 
     return \@result;
+}
+
+method bank_code_search(:$bank_code) {
+
+    return $self->bank(bank_code => $bank_code);
 }
 
 __PACKAGE__->meta->make_immutable();
@@ -172,7 +177,9 @@ ZenginCode is Datasets of bank codes and branch codes for japanese.
 
 =head2 branches
 
-=head2 search
+=head2 bank_name_search
+
+=head2 bank_code_search
 
 =head1 LICENSE
 

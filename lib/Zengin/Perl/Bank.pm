@@ -9,9 +9,7 @@ use Function::Parameters 2.001003;
 use Exporter 'import';
 our @EXPORT = qw/branch/;
 
-has code => ( is => "ro", );
-
-map { has $_ => ( is => 'ro' ) } qw (name hira kana roma _path);
+map { has $_ => ( is => 'ro' ) } qw (code name hira kana roma _path);
 
 method branch(:$branch_code) {
     croak "There is no corresponding branch code.\n"

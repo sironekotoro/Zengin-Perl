@@ -44,11 +44,11 @@ method last_update(){
 
 method _banks_file_builder() {
 
-    return dist_file( ref $self, 'data/banks.json' );
+    return dist_file( 'Zengin-Perl', 'data/banks.json' );
 }
 
 method _branches_folder_builder() {
-    my $dir = dist_dir( ref $self );
+    my $dir = dist_dir( 'Zengin-Perl' );
 
     return File::Spec->catfile( $dir, 'data', 'branches' );
 }

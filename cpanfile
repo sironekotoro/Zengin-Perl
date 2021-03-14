@@ -1,6 +1,7 @@
 requires 'Encode';
 requires 'File::Share', '0.25';
 requires 'File::Slurp', '9999.32';
+requires 'Function::Parameters', '2.001003';
 requires 'JSON';
 requires 'Lingua::JA::Regular::Unicode', '0.13';
 requires 'Moo', '2.004004';

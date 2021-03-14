@@ -76,7 +76,11 @@ ZenginCode is Datasets of bank codes and branch codes for japanese.
 
 ## branches
 
-## search
+## bank\_name\_search
+
+## bank\_code\_search
+
+## last\_update
 
 # LICENSE
 

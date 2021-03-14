@@ -68,6 +68,10 @@ Zengin::Perl::Bank - Bank class
 
 =head2 branch
 
+=head2 branch_name_search
+
+=head2 branch_code_search
+
 =head1 LICENSE
 
 Copyright (C) sironekotoro.

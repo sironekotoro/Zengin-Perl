@@ -47,6 +47,7 @@
             "Encode" : "0",
             "File::Share" : "0.25",
             "File::Slurp" : "9999.32",
+            "Function::Parameters" : "2.001003",
             "JSON" : "0",
             "Lingua::JA::Regular::Unicode" : "0.13",
             "Moo" : "2.004004",

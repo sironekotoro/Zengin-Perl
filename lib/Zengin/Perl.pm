@@ -187,6 +187,8 @@ ZenginCode is Datasets of bank codes and branch codes for japanese.
 
 =head2 bank_code_search
 
+=head2 last_update
+
 =head1 LICENSE
 
 Copyright (C) sironekotoro.

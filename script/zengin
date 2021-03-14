@@ -24,8 +24,9 @@ GETTING STARTED
     zengin みずほ 東京
 EOS
 
-if ( $argv_count == 0 ) {
+if ( $argv_count == 0 || $argv_count > 2) {
     print $help;
+    exit
 }
 elsif ( $argv_count == 1 && $first_argv =~ /\d+/ ) {
     my $bank = $zp->bank( bank_code => sprintf( "%04d", $ARGV[0] ) );

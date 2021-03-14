@@ -5,7 +5,6 @@ use Encode;
 
 use Zengin::Perl;
 
-
 my $arg_count_zero_result = `perl script/zengin`;
 like  (decode_utf8($arg_count_zero_result), qr/GETTING STARTED/);
 

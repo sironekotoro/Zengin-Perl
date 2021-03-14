@@ -30,8 +30,8 @@ if ( $argv_count == 0 ) {
 }
 elsif ( $argv_count == 1 && $first_argv =~ /\d+/ ) {
     my $bank = $zp->bank( bank_code => sprintf( "%04d", $ARGV[0] ) );
-    printf( "銀行コード: %s\n",             $bank->code );
-    printf( "銀行名: %s\n",                   $bank->name );
+    printf( "銀行コード: %s\n",     $bank->code );
+    printf( "銀行名: %s\n",       $bank->name );
     printf( "銀行名（ひらがな）: %s\n", $bank->hira );
     printf( "銀行名（カタカナ）: %s\n", $bank->kana );
     printf( "銀行名（ローマ字）: %s\n", $bank->roma );
@@ -39,7 +39,7 @@ elsif ( $argv_count == 1 && $first_argv =~ /\d+/ ) {
 elsif ( $argv_count == 1 && $first_argv =~ /\w+/ ) {
     my $bank_name = alnum_h2z($first_argv);
 
-    my $search_result = $zp->search($bank_name);
+    my $search_result = $zp->bank_search(bank_name => $bank_name);
 
     for my $bank ( @{$search_result} ) {
         printf( "%s: %s\n", $bank->code, $bank->name );
@@ -48,10 +48,9 @@ elsif ( $argv_count == 1 && $first_argv =~ /\w+/ ) {
 elsif ( $argv_count == 2 ) {
     my $bank_name   = alnum_h2z($first_argv);
     my $branch_name = alnum_h2z($second_argv);
-    $branch_name
-        =~ tr/０１２３４５６７８９/〇一二三四五六七八九/;
+    $branch_name =~ tr/０１２３４５６７８９/〇一二三四五六七八九/;
 
-    my $search_result = $zp->search($bank_name);
+    my $search_result = $zp->bank_search( bank_name => $bank_name);
     for my $bank ( @{$search_result} ) {
         my $branches = $bank->branches();
 

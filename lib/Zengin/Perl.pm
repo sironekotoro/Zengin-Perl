@@ -5,6 +5,7 @@ use Carp;
 use File::Share 0.25 ':all';
 use File::Spec;
 use File::Slurp 9999.32 qw/read_file/;
+use Function::Parameters 2.001003;
 use JSON qw/decode_json/;
 use Moo 2.004004;
 
@@ -35,27 +36,25 @@ has banks => (
     lazy    => 1,
 );
 
-sub _banks_file_builder {
-    return dist_file( 'Zengin-Perl', 'data/banks.json' );
+method _banks_file_builder() {
+
+    return dist_file( ref $self, 'data/banks.json' );
 }
 
-sub _branches_folder_builder {
-    my $dir = dist_dir('Zengin-Perl');
+method _branches_folder_builder() {
+    my $dir = dist_dir( ref $self );
+
     return File::Spec->catfile( $dir, 'data', 'branches' );
 }
 
-sub bank {
-    my ( $self, undef, $bank_code ) = @_;
-
+method bank(:$bank_code) {
     croak "There is no corresponding bank code.\n"
         unless exists $self->banks->{$bank_code};
 
     return $self->banks->{$bank_code};
 }
 
-sub _banks_builder {
-    my $self = shift;
-
+method _banks_builder() {
     my $file  = read_file( $self->banks_file );
     my $banks = decode_json($file);
 
@@ -70,20 +69,19 @@ sub _banks_builder {
         }
         %hash;
     };
+
     return \%banks;
 }
 
-sub search {
-    my $self = shift;
-    my @argv = @_;
+method bank_search(:$bank_name) {
 
-    my @result;
     my $banks = $self->banks();
+    my @result = ();
 
     for my $code ( sort keys %{$banks} ) {
         my $bank = $banks->{$code};
         push @result, $bank
-            if $bank->name() =~ /$argv[0]/;
+            if $bank->name() =~ /$bank_name/;
     }
 
     return \@result;

@@ -4,6 +4,7 @@ use Carp;
 use File::Slurp 9999.32 qw/read_file/;
 use JSON qw/decode_json/;
 use Moo 2.004004;
+use Function::Parameters 2.001003;
 
 use Exporter 'import';
 our @EXPORT = qw/branch/;
@@ -12,14 +13,11 @@ has code => ( is => "ro", );
 
 map { has $_ => ( is => 'ro' ) } qw (name hira kana roma _path);
 
-sub branch {
-    my ( $self, undef, $branch_code ) = @_;
-
+method branch(:$branch_code) {
     croak "There is no corresponding branch code.\n"
         unless exists $self->branches->{$branch_code};
 
     return $self->branches->{$branch_code};
-
 }
 
 has branches => (
@@ -28,9 +26,7 @@ has branches => (
     lazy    => 1,
 );
 
-sub _branches_builder {
-    my $self = shift;
-
+method _branches_builder() {
     my $file     = read_file( $self->_path );
     my $branches = decode_json($file);
 

@@ -11,13 +11,6 @@ our @EXPORT = qw/branch/;
 
 map { has $_ => ( is => 'ro' ) } qw (code name hira kana roma _path);
 
-method branch(:$branch_code) {
-    croak "There is no corresponding branch code.\n"
-        unless exists $self->branches->{$branch_code};
-
-    return $self->branches->{$branch_code};
-}
-
 has branches => (
     is      => "ro",
     builder => "_branches_builder",
@@ -36,6 +29,29 @@ method _branches_builder() {
         %hash;
     };
     return \%branches;
+}
+
+method branch(:$branch_code) {
+    croak "There is no corresponding branch code.\n"
+        unless exists $self->branches->{$branch_code};
+
+    return $self->branches->{$branch_code};
+}
+
+method branch_name_search(:$branch_name) {
+    my @result = ();
+
+    for my $branch_code (sort keys %{$self->branches}){
+        my $branch = $self->branches->{$branch_code};
+        push @result, $branch if $branch->name =~ /$branch_name/;
+    }
+
+    return \@result;
+}
+
+method branch_code_search(:$branch_code) {
+
+    return $self->branch(branch_code => $branch_code);
 }
 
 __PACKAGE__->meta->make_immutable();

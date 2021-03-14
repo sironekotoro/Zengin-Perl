@@ -1,167 +1,95 @@
+#!/usr/bin/env perl
+package Zengin::Perl;    #{
 use 5.014;
+use Carp;
+use File::Share 0.25 ':all';
+use File::Spec;
+use File::Slurp 9999.32 qw/read_file/;
+use JSON qw/decode_json/;
+use Moo 2.004004;
 
-package Zengin::Perl {
-    use Carp;
-    use File::Share 0.25 ':all';
-    use File::Spec;
-    use File::Slurp 9999.32 qw/read_file/;
-    use JSON 4.01 qw/decode_json/;
-    use Mouse v2.5.10;
-    use Mouse::Util::TypeConstraints;
-    use Smart::Args 0.14;
+use FindBin;
+use lib "$FindBin::Bin/lib";
+use parent qw/
+    Zengin::Perl::Bank
+    Zengin::Perl::Branch
+    /;
 
-    our $VERSION = "0.10.20210302";
+our $VERSION = "0.11.20210302";
 
-    has banks_file => (
-        is      => "ro",
-        isa     => "Str",
-        builder => "_banks_file_builder",
-        lazy    => 1,
-    );
+has banks_file => (
+    is      => "ro",
+    builder => "_banks_file_builder",
+    lazy    => 1,
+);
 
-    has branches_folder => (
-        is      => "ro",
-        isa     => "Str",
-        builder => "_branches_folder_builder",
-        lazy    => 1,
-    );
+has branches_folder => (
+    is      => "ro",
+    builder => "_branches_folder_builder",
+    lazy    => 1,
+);
 
-    has banks => (
-        is      => "ro",
-        isa     => "HashRef",
-        builder => "_banks_builder",
-        lazy    => 1,
-    );
+has banks => (
+    is      => "ro",
+    builder => "_banks_builder",
+    lazy    => 1,
+);
 
-    sub _banks_file_builder {
-        return dist_file( 'Zengin-Perl', 'data/banks.json' );
-    }
+sub _banks_file_builder {
+    return dist_file( 'Zengin-Perl', 'data/banks.json' );
+}
 
-    sub _branches_folder_builder {
-        my $dir = dist_dir('Zengin-Perl');
-        return File::Spec->catfile( $dir, 'data', 'branches' );
-    }
+sub _branches_folder_builder {
+    my $dir = dist_dir('Zengin-Perl');
+    return File::Spec->catfile( $dir, 'data', 'branches' );
+}
 
-    subtype 'bank_code' => as 'Int' => where { length($_) == 4 }
-    => message {"This number($_) is not bank code(4-digit)."};
+sub bank {
+    my ( $self, undef, $bank_code ) = @_;
 
-    sub bank {
-        args my $self     => { is  => 'Zengin::Perl' },
-            my $bank_code => { isa => 'bank_code' };
+    croak "There is no corresponding bank code.\n"
+        unless exists $self->banks->{$bank_code};
 
-        croak "There is no corresponding bank code.\n"
-            unless exists $self->banks->{$bank_code};
+    return $self->banks->{$bank_code};
+}
 
-        return $self->banks->{$bank_code};
-    }
+sub _banks_builder {
+    my $self = shift;
 
-    sub _banks_builder {
-        my $self = shift;
+    my $file  = read_file( $self->banks_file );
+    my $banks = decode_json($file);
 
-        my $file  = read_file( $self->banks_file );
-        my $banks = decode_json($file);
+    my %banks = do {
+        my %hash = ();
+        while ( my ( $key, $value ) = each %{$banks} ) {
+            $hash{$key} = Zengin::Perl::Bank->new($value);
 
-        my %banks = do {
-            my %hash = ();
-            while ( my ( $key, $value ) = each %{$banks} ) {
-                $hash{$key} = Bank->new($value);
-
-                $hash{$key}{_path}
-                    = File::Spec->catfile( $self->branches_folder,
-                    $value->{code} . '.json' );
-            }
-            %hash;
-        };
-        return \%banks;
-    }
-
-    sub search {
-        my $self = shift;
-        my @argv = @_;
-
-        my @result;
-        my $banks = $self->banks();
-
-        for my $code ( sort keys %{$banks} ) {
-            my $bank = $banks->{$code};
-            push @result, $bank
-                if $bank->name() =~ /$argv[0]/;
+            $hash{$key}{_path}
+                = File::Spec->catfile( $self->branches_folder,
+                $value->{code} . '.json' );
         }
-
-        return \@result;
-    }
-
-    __PACKAGE__->meta->make_immutable();
-
+        %hash;
+    };
+    return \%banks;
 }
 
-package Bank {
-    use Carp;
-    use File::Slurp 9999.32 qw/read_file/;
-    use JSON 4.01 qw/decode_json/;
-    use Mouse v2.5.10;
-    use Mouse::Util::TypeConstraints;
-    use Smart::Args 0.14;
+sub search {
+    my $self = shift;
+    my @argv = @_;
 
-    has code => (
-        is  => "ro",
-        isa => "Int",
-    );
+    my @result;
+    my $banks = $self->banks();
 
-    map { has $_ => ( is => 'ro', isa => 'Str' ) }
-        qw (name hira kana roma _path);
-
-    subtype 'branch_code' => as 'Int' => where { length($_) == 3 }
-    => message {"This number($_) is not branch code(3-digit)."};
-
-    sub branch {
-        args my $self       => { is  => 'Bank' },
-            my $branch_code => { isa => 'branch_code' };
-
-        croak "There is no corresponding branch code.\n"
-            unless exists $self->branches->{$branch_code};
-
-        return $self->branches->{$branch_code};
-
+    for my $code ( sort keys %{$banks} ) {
+        my $bank = $banks->{$code};
+        push @result, $bank
+            if $bank->name() =~ /$argv[0]/;
     }
 
-    has branches => (
-        is      => "ro",
-        builder => "_branches_builder",
-        lazy    => 1,
-    );
-
-    sub _branches_builder {
-        my $self = shift;
-
-        my $file     = read_file( $self->_path );
-        my $branches = decode_json($file);
-
-        my %branches = do {
-            my %hash = ();
-            while ( my ( $key, $value ) = each %{$branches} ) {
-                $hash{$key} = Branch->new($value);
-            }
-            %hash;
-        };
-        return \%branches;
-    }
-
-    __PACKAGE__->meta->make_immutable();
+    return \@result;
 }
 
-package Branch {
-    use Mouse v2.5.10;
-
-    has code => (
-        is  => "ro",
-        isa => "Int",
-    );
-
-    map { has $_ => ( is => 'ro', isa => 'Str' ) } qw (name hira kana roma);
-
-    __PACKAGE__->meta->make_immutable();
-}
+__PACKAGE__->meta->make_immutable();
 
 1;
 __END__

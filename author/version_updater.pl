@@ -85,9 +85,6 @@ sub check_tempfile {
 
     open( my $READ, "<:utf8", $temp_file )
         or die "script file read error.\n";
-    my $script = do { local $/; <$READ> };
-
-    eval($script) or die "$temp_file eval error";
 
     my $command = 'perl -wc ' . $temp_file;
 

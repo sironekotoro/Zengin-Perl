@@ -47,11 +47,10 @@
             "Encode" : "0",
             "File::Share" : "0.25",
             "File::Slurp" : "9999.32",
-            "JSON" : "4.01",
+            "JSON" : "0",
             "Lingua::JA::Regular::Unicode" : "0.13",
-            "Mouse" : "v2.5.10",
-            "Mouse::Util::TypeConstraints" : "0",
-            "Smart::Args" : "0.14",
+            "Moo" : "2.004004",
+            "parent" : "0",
             "perl" : "5.014"
          }
       },
@@ -74,7 +73,7 @@
          "web" : "https://github.com/sironekotoro/Zengin-Perl"
       }
    },
-   "version" : "0.10.20210302",
+   "version" : "0.11.20210302",
    "x_serialization_backend" : "JSON::PP version 4.05",
    "x_static_install" : 1
 }

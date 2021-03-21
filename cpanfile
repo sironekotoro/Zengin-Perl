@@ -18,5 +18,6 @@ on test => sub {
 };
 
 on develop => sub {
+    requires 'File::Path';
     requires 'Test::Perl::Critic', '1.04';
 };

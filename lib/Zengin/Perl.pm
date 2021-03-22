@@ -16,7 +16,7 @@ use parent qw/
     Zengin::Perl::Branch
     /;
 
-our $VERSION = "0.11.20210315";
+our $VERSION = "0.11.20210322";
 
 has banks_file => (
     is      => "ro",

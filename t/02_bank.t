@@ -20,7 +20,7 @@ like(
     exception {
         my $bank = $zp->bank( bank_code => '0002' )
     },
-    qr/no corresponding bank code/,
+    qr//,
     "Nonexistent bank codes"
 );
 

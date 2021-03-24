@@ -73,9 +73,6 @@ method _banks_builder() {
 }
 
 method bank(:$bank_code) {
-    croak "There is no corresponding bank code.\n"
-        unless exists $self->banks->{$bank_code};
-
     return $self->banks->{$bank_code};
 }
 

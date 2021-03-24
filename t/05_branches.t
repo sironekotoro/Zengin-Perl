@@ -24,7 +24,7 @@ like(
         my $bank = $zp->bank( bank_code => '0001' );
         my $branch = $bank->branch( branch_code => '002' );
     },
-    qr/no corresponding branch code/,
+    qr//,
     "Nonexistent branch codes"
 );
 

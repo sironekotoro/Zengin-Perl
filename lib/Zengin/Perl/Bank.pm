@@ -32,9 +32,6 @@ method _branches_builder() {
 }
 
 method branch(:$branch_code) {
-    croak "There is no corresponding branch code.\n"
-        unless exists $self->branches->{$branch_code};
-
     return $self->branches->{$branch_code};
 }
 

@@ -26,8 +26,8 @@ Zengin::Perl - The perl implementation of ZenginCode.
     my $banks = $zp->banks();
     while ( my ( $bank_code, $bank_info ) = each %{$banks} ) {
         print "=" x 20 . "\n";
-        print $bank_info->{code} . "\n";
-        print $bank_info->{roma} . "\n";
+        print $bank_info->code . "\n";
+        print $bank_info->roma . "\n";
         print "=" x 20 . "\n";
     }
 

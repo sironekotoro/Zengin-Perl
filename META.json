@@ -46,8 +46,6 @@
          "requires" : {
             "Encode" : "0",
             "File::Share" : "0.25",
-            "File::Slurp" : "9999.32",
-            "Function::Parameters" : "2.001003",
             "JSON" : "0",
             "Lingua::JA::Regular::Unicode" : "0.13",
             "Moo" : "2.004004",
@@ -74,7 +72,7 @@
          "web" : "https://github.com/sironekotoro/Zengin-Perl"
       }
    },
-   "version" : "0.11.20210426",
+   "version" : "0.12.20210426",
    "x_serialization_backend" : "JSON::PP version 4.05",
    "x_static_install" : 1
 }

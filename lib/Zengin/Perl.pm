@@ -1,11 +1,9 @@
 #!/usr/bin/env perl
-package Zengin::Perl;    #{
+package Zengin::Perl;
 use 5.014;
 use Carp;
-use File::Share 0.25 ':all';
+use File::Share 0.25 qw/dist_file dist_dir/;
 use File::Spec;
-use File::Slurp 9999.32 qw/read_file/;
-use Function::Parameters 2.001003;
 use JSON qw/decode_json/;
 use Moo 2.004004;
 
@@ -16,7 +14,7 @@ use parent qw/
     Zengin::Perl::Branch
     /;
 
-our $VERSION = "0.11.20210426";
+our $VERSION = "0.12.20210426";
 
 has banks_file => (
     is      => "ro",
@@ -36,25 +34,34 @@ has banks => (
     lazy    => 1,
 );
 
-method last_update(){
-    my (undef, undef, $last_update) = split /\./, $VERSION;
+sub last_update {
+    my ( undef, undef, $last_update ) = split /\./, $VERSION;
 
     return $last_update;
 }
 
-method _banks_file_builder() {
+sub _banks_file_builder {
 
     return dist_file( 'Zengin-Perl', 'data/banks.json' );
 }
 
-method _branches_folder_builder() {
-    my $dir = dist_dir( 'Zengin-Perl' );
+sub _branches_folder_builder {
+    my $dir = dist_dir('Zengin-Perl');
 
     return File::Spec->catfile( $dir, 'data', 'branches' );
 }
 
-method _banks_builder() {
-    my $file  = read_file( $self->banks_file );
+sub _banks_builder {
+    my $self = shift;
+
+    my $file;
+    open my $FH, '<', $self->banks_file or die;
+    {
+        local $/;
+        $file = <$FH>;
+    }
+    close $FH;
+
     my $banks = decode_json($file);
 
     my %banks = do {
@@ -72,13 +79,20 @@ method _banks_builder() {
     return \%banks;
 }
 
-method bank(:$bank_code) {
+sub bank {
+    my ( $self, %arg ) = @_;
+
+    my $bank_code = $arg{bank_code};
+
     return $self->banks->{$bank_code};
 }
 
-method bank_name_search(:$bank_name) {
+sub bank_name_search {
+    my ( $self, %arg ) = @_;
 
-    my $banks = $self->banks();
+    my $bank_name = $arg{bank_name};
+
+    my $banks  = $self->banks();
     my @result = ();
 
     for my $code ( sort keys %{$banks} ) {
@@ -90,9 +104,11 @@ method bank_name_search(:$bank_name) {
     return \@result;
 }
 
-method bank_code_search(:$bank_code) {
+sub bank_code_search {
+    my ( $self, %arg ) = @_;
 
-    return $self->bank(bank_code => $bank_code);
+    my $bank_code = $arg{bank_code};
+    return $self->bank( bank_code => $bank_code );
 }
 
 __PACKAGE__->meta->make_immutable();

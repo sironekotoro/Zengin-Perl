@@ -1,10 +1,8 @@
 #!/usr/bin/env perl
 package Zengin::Perl::Bank;
 use Carp;
-use File::Slurp 9999.32 qw/read_file/;
 use JSON qw/decode_json/;
 use Moo 2.004004;
-use Function::Parameters 2.001003;
 
 use Exporter 'import';
 our @EXPORT = qw/branch/;
@@ -17,8 +15,17 @@ has branches => (
     lazy    => 1,
 );
 
-method _branches_builder() {
-    my $file     = read_file( $self->_path );
+sub _branches_builder {
+    my $self = shift;
+
+    my $file;
+    open my $FH, '<', $self->_path or die;
+    {
+        local $/;
+        $file = <$FH>;
+    }
+    close $FH;
+
     my $branches = decode_json($file);
 
     my %branches = do {
@@ -31,14 +38,20 @@ method _branches_builder() {
     return \%branches;
 }
 
-method branch(:$branch_code) {
+sub branch {
+    my ( $self, %arg ) = @_;
+    my $branch_code = $arg{branch_code};
+
     return $self->branches->{$branch_code};
 }
 
-method branch_name_search(:$branch_name) {
+sub branch_name_search {
+    my ( $self, %arg ) = @_;
+    my $branch_name = $arg{branch_name};
+
     my @result = ();
 
-    for my $branch_code (sort keys %{$self->branches}){
+    for my $branch_code ( sort keys %{ $self->branches } ) {
         my $branch = $self->branches->{$branch_code};
         push @result, $branch if $branch->name =~ /$branch_name/;
     }
@@ -46,9 +59,11 @@ method branch_name_search(:$branch_name) {
     return \@result;
 }
 
-method branch_code_search(:$branch_code) {
+sub branch_code_search {
+    my ( $self, %arg ) = @_;
+    my $branch_code = $arg{branch_code};
 
-    return $self->branch(branch_code => $branch_code);
+    return $self->branch( branch_code => $branch_code );
 }
 
 __PACKAGE__->meta->make_immutable();

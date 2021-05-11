@@ -72,7 +72,7 @@
          "web" : "https://github.com/sironekotoro/Zengin-Perl"
       }
    },
-   "version" : "0.12.20210426",
+   "version" : "0.12.20210509",
    "x_serialization_backend" : "JSON::PP version 4.05",
    "x_static_install" : 1
 }

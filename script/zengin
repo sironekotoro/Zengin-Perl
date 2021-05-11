@@ -2,118 +2,133 @@
 use strict;
 use warnings;
 use utf8;
-
-use Encode qw/decode encode/;
-use Lingua::JA::Regular::Unicode 0.13;
+use Lingua::JA::Regular::Unicode 0.13 qw/alnum_h2z/;
+use Encode;
 
 use Zengin::Perl;
 
-my $zp = Zengin::Perl->new();
-
-my $argv_count = scalar @ARGV;
-
 my $character_code = character_code();
 
+# 引数に何もない場合、引数が2つ以上のとき
 if ( $#ARGV == -1 || $#ARGV > 1 ) {
     print encode( $character_code, help_message() );
     exit;
 }
 
-my ( $first_argv, $second_argv ) = _argument(@ARGV);
+my $first_argv  = decode( $character_code, $ARGV[0] );
+my $second_argv = decode( $character_code, $ARGV[1] );
 
-if ( $#ARGV == 0 && $first_argv =~ /\d+/ ) {
-    my $bank   = $zp->bank( bank_code => sprintf( "%04d", $first_argv ) );
-    my $result = vervose_bank($bank);
+zengin( $first_argv, $second_argv );
+
+sub zengin {
+    my ( $arg_first, $arg_second ) = @_;
+
+    my $zp = Zengin::Perl->new();
+
+    my $result;
+
+    my $banks = do {
+        my $banks = [];
+        if ( $arg_first =~ /\d+/ ) {
+
+            # 銀行コードは数字4桁左ゼロ埋め
+            my $bank_code = sprintf( "%04d", $arg_first );
+            my $bank      = $zp->bank_code_search( bank_code => $bank_code );
+            push @{$banks}, $bank;
+            $banks;
+        }
+        elsif ( $arg_first =~ /\w+/ ) {
+
+            # 銀行名に含まれる英字を大文字にする
+            $arg_first = uc($arg_first);
+
+            # 半角英字を全角英字に
+            my $bank_name = alnum_h2z($arg_first);
+
+            # PayPayのみ大文字小文字が混じるので再変換
+            $bank_name = 'ＰａｙＰａｙ' if $bank_name eq 'ＰＡＹＰＡＹ';
+
+            $banks = $zp->bank_name_search( bank_name => $bank_name );
+            $banks;
+        }
+    };
+
+    if ($arg_second) {
+
+        for my $bank ( @{$banks} ) {
+
+            if ( $arg_second =~ /\d+/ ) {
+                my $branch_code = sprintf( "%03d", $arg_second );
+                my $branch = $bank->branch( branch_code => $branch_code );
+                $result = bank_vervose($bank) . branch_vervose($branch);
+                print encode( $character_code, $result );
+            }
+
+            my $branches = $bank->branches();
+
+            for my $branch ( values %{$branches} ) {
+
+                if ( $branch->name =~ /$arg_second/ ) {
+                    my $bank_name = $bank->name;
+                    my $bank_code = $bank->code;
+
+                    my $branch_name = $branch->name;
+                    my $branch_code = $branch->code;
+
+                    $result
+                        .= "$bank_code\t$bank_name\t$branch_code\t$branch_name\n";
+
+                }
+
+            }
+
+        }
+
+    }
+    else {
+
+        for my $bank ( @{$banks} ) {
+
+            $result .= bank_vervose($bank);
+        }
+
+    }
 
     print encode( $character_code, $result );
-}
-elsif ( $#ARGV == 0 && $first_argv =~ /\w+/ ) {
-    my $banks = bank_name_search($first_argv);
 
-    my $results;
-    for my $bank ( @{$banks} ) {
-        $results .= sprintf( "%s: %s\n", $bank->code, $bank->name );
-    }
-
-    print encode( $character_code, $results );
-}
-elsif ( $first_argv =~ /\d+/ && $second_argv =~ /\d+/ ) {
-    my $bank   = $zp->bank( bank_code => $first_argv );
-    my $result = vervose_branch( $bank, $second_argv );
-
-    print encode( $character_code, $result );
-}
-elsif ( $first_argv =~ /\d+/ && $second_argv =~ /\w+/ ) {
-    my $bank    = $zp->bank( bank_code => $first_argv );
-    my $results = branch_name_search( $bank, $second_argv );
-
-    print encode( $character_code, $results );
 }
 
-# TODO
-elsif ( $first_argv =~ /\w+/ && $second_argv =~ /\d+/ ) {
-    my $banks = bank_name_search($first_argv);
+sub bank_vervose {
+    my $bank = shift;
 
-    use Data::Dumper;
+    my %hash = ();
+    map { $hash{$_} = $bank->$_ } qw(code name hira kana roma);
 
-    my $results = '';
+    return << "EOS";
+============================
+銀行コード　　　　: $hash{code}
+銀行名　　　　　　: $hash{name}
+銀行名（ひらがな）: $hash{hira}
+銀行名（カタカナ）: $hash{kana}
+銀行名（ローマ字）: $hash{roma}
+EOS
 
-    for my $bank ( @{$banks} ) {
-
-        my $branch = $bank->branch( branch_code => $second_argv );
-
-        next unless $branch;
-        $results .= sprintf( "%s: %s %s: %s\n",
-            $bank->code, $bank->name, $branch->code, $branch->name );
-    }
-
-    print encode( $character_code, $results );
-}
-elsif ( $first_argv =~ /\w+/ && $second_argv =~ /\w+/ ) {
-    my $banks = bank_name_search($first_argv);
-
-    my $results = '';
-
-    for my $bank ( @{$banks} ) {
-        my $result = branch_name_search( $bank, $second_argv );
-        $results .= $result if $result;
-    }
-
-    print encode( $character_code, $results );
 }
 
-sub character_code {
-    if ( $^O eq 'MSWin32' ) {
-        return 'cp932';
-    }
-    else {
-        return 'utf8';
-    }
-}
+sub branch_vervose {
+    my $branch      = shift;
+    my %branch_hash = ();
+    map { $branch_hash{$_} = $branch->$_ } qw(code name hira kana roma);
 
-sub _argument {
-    my @argv = @ARGV;
+    return << "EOS";
+============================
+支店コード　　　　: $branch_hash{code}
+支店名　　　　　　: $branch_hash{name}
+支店名（ひらがな）: $branch_hash{hira}
+支店名（カタカナ）: $branch_hash{kana}
+支店名（ローマ字）: $branch_hash{roma}
+EOS
 
-    my $first_argv  = decode( $character_code, $argv[0] );
-    my $second_argv = decode( $character_code, $argv[1] );
-
-    # my ( $first_argv, $branch_name );
-
-    if ( $first_argv =~ /\d+/ ) {
-        $first_argv = sprintf( "%04d", $first_argv );
-    }
-    else {
-        $first_argv = alnum_h2z($first_argv);
-    }
-
-    if ( $second_argv && $second_argv =~ /\d+/ ) {
-        $second_argv = sprintf( "%03d", $second_argv );
-    }
-    else {
-        $second_argv = alnum_h2z($second_argv);
-    }
-
-    return ( $first_argv, $second_argv );
 }
 
 sub help_message {
@@ -130,74 +145,14 @@ EOS
     return $help;
 }
 
-sub vervose_bank {
-    my $bank = shift;
-
-    my %hash = ();
-    map { $hash{$_} = $bank->$_ } qw(code name hira kana roma);
-
-    my $vervose_bank = << "EOS";
-銀行コード　　　　: $hash{code}
-銀行名　　　　　　: $hash{name}
-銀行名（ひらがな）: $hash{hira}
-銀行名（カタカナ）: $hash{kana}
-銀行名（ローマ字）: $hash{roma}
-EOS
-
-    return $vervose_bank;
-}
-
-sub bank_name_search {
-    my $bank_name     = shift;
-    my $search_result = $zp->bank_name_search( bank_name => $bank_name );
-
-    return $search_result;
-}
-
-sub vervose_branch {
-    my $bank        = shift;
-    my $second_argv = shift;
-
-    # 郵貯だったら第二引数(支店名)を全角漢字にする
-    if ( $bank->code eq 9900 ) {
-        my $second_argv = alnum_h2z($second_argv);
-        $second_argv =~ tr/０１２３４５６７８９/〇一二三四五六七八九/;
+sub character_code {
+    if ( $^O eq 'MSWin32' ) {
+        return 'cp932';
     }
-
-    my %bank_hash = ();
-    map { $bank_hash{$_} = $bank->$_ } qw(code name hira kana roma);
-
-    my %branch_hash = ();
-    my $branch      = $bank->branch( branch_code => $second_argv );
-    map { $branch_hash{$_} = $branch->$_ } qw(code name hira kana roma);
-
-    my $vervose_branch = << "EOS";
-銀行コード　　　　: $bank_hash{code}
-銀行名　　　　　　: $bank_hash{name}
-銀行名（ひらがな）: $bank_hash{hira}
-銀行名（カタカナ）: $bank_hash{kana}
-銀行名（ローマ字）: $bank_hash{roma}
------------------------------------
-支店コード　　　　: $branch_hash{code}
-支店名　　　　　　: $branch_hash{name}
-支店名（ひらがな）: $branch_hash{hira}
-支店名（カタカナ）: $branch_hash{kana}
-支店名（ローマ字）: $branch_hash{roma}
-EOS
-
-    return $vervose_branch;
-}
-
-sub branch_name_search {
-    my $bank        = shift;
-    my $second_argv = shift;
-
-    my $branches = $bank->branch_name_search( branch_name => $second_argv );
-
-    my $results;
-    for my $branch ( @{$branches} ) {
-        $results .= sprintf( "%s: %s %s: %s\n",
-            $bank->code, $bank->name, $branch->code, $branch->name );
+    else {
+        return 'utf8';
     }
-    return $results;
 }
+
+1;
+

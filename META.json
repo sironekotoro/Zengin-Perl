@@ -4,7 +4,7 @@
       "sironekotoro <develop@sironekotoro.com>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Minilla/v3.1.14, CPAN::Meta::Converter version 2.150010",
+   "generated_by" : "Minilla/v3.1.15, CPAN::Meta::Converter version 2.150010",
    "license" : [
       "perl_5"
    ],
@@ -67,11 +67,11 @@
       "homepage" : "https://github.com/sironekotoro/Zengin-Perl",
       "repository" : {
          "type" : "git",
-         "url" : "git://github.com/sironekotoro/Zengin-Perl.git",
+         "url" : "https://github.com/sironekotoro/Zengin-Perl.git",
          "web" : "https://github.com/sironekotoro/Zengin-Perl"
       }
    },
-   "version" : "0.12.20220130",
-   "x_serialization_backend" : "JSON::PP version 4.05",
+   "version" : "0.12.20220307",
+   "x_serialization_backend" : "JSON::PP version 4.07",
    "x_static_install" : 1
 }

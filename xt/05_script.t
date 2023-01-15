@@ -25,7 +25,7 @@ my $result = << 'EOS';
 銀行名（ローマ字）: mizuho
 EOS
 
-is $result, $bankcode_branchcode;
+is $bankcode_branchcode, $result;
 
 # =====================================
 # テストパターン：zengin 0001 001
@@ -48,7 +48,7 @@ my $result = << 'EOS';
 支店名（ローマ字）: toukiyou
 EOS
 
-is $result, $bankcode_branchcode;
+is $bankcode_branchcode, $result;
 
 # =====================================
 # テストパターン：zengin 0001 東京営業部
@@ -60,7 +60,7 @@ $result = << 'EOS';
 0001	みずほ	001	東京営業部
 EOS
 
-is $result, $bankcode_branchname;
+is $bankcode_branchname, $result,;
 
 # =====================================
 # テストパターン：zengin みずほ
@@ -89,7 +89,7 @@ $result = << 'EOS';
 銀行名（ローマ字）: saitamamizuhonoukiyou
 EOS
 
-is $result, $bankname;
+is $bankname, $result;
 
 # =====================================
 # テストパターン：zengin みずほ 001
@@ -102,7 +102,7 @@ $result = << 'EOS';
 4859	埼玉みずほ農協	001	本店
 EOS
 
-is $result, $bankname_branchcode;
+is $bankname_branchcode, $result;
 
 # =====================================
 # テストパターン：zengin みずほ 東京
@@ -119,7 +119,7 @@ $result = << 'EOS';
 0001	みずほ	777	東京都庁出張所
 EOS
 
-is $result, $bankname_branchname;
+is $bankname_branchname, $result;
 
 # =====================================
 # テストパターン：zengin 0001 東京
@@ -136,13 +136,15 @@ $result = << 'EOS';
 0001	みずほ	777	東京都庁出張所
 EOS
 
-is $result, $bankname_branchname;
+is $bankname_branchname, $result;
 
 # =====================================
 # テストパターン：zengin 001
 # =====================================
 
 my $bankname_branchname = decode( 'utf8', `perl zengin 001` );
+
+is $bankname_branchname, $result;
 
 $result = << 'EOS';
 GETTING STARTED
@@ -160,6 +162,8 @@ EOS
 # =====================================
 
 my $bankname_branchname = decode( 'utf8', `perl zengin 00001` );
+
+is $bankname_branchname, $result;
 
 $result = << 'EOS';
 GETTING STARTED

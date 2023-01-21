@@ -142,9 +142,7 @@ is $bankname_branchname, $result;
 # テストパターン：zengin 001
 # =====================================
 
-my $bankname_branchname = decode( 'utf8', `perl zengin 001` );
-
-is $bankname_branchname, $result;
+my $less_bankcode = decode( 'utf8', `perl zengin 001` );
 
 $result = << 'EOS';
 GETTING STARTED
@@ -157,13 +155,15 @@ GETTING STARTED
     zengin 0001 001
 EOS
 
+is $less_bankcode, $result;
+
 # =====================================
 # テストパターン：zengin 00001
 # =====================================
 
-my $bankname_branchname = decode( 'utf8', `perl zengin 00001` );
+my $more_bankname = decode( 'utf8', `perl zengin 00001` );
 
-is $bankname_branchname, $result;
+is $more_bankname, $result;
 
 $result = << 'EOS';
 GETTING STARTED

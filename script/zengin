@@ -18,6 +18,8 @@ if ( scalar @ARGV == 0 || scalar @ARGV > 2 ) {
 my $first_argv  = decode( $character_code, $ARGV[0] );
 my $second_argv = decode( $character_code, $ARGV[1] );
 
+# ( $first_argv, $second_argv ) = ( 001, '' );
+
 zengin( $first_argv, $second_argv );
 
 sub zengin {
@@ -29,13 +31,21 @@ sub zengin {
 
     my $banks = do {
         my $banks = [];
-        if ( $arg_first =~ /\d+/ ) {
+        if ( $arg_first =~ /\d+/ && length($arg_first) == 4 ) {
             $banks = _bank_code($arg_first);
             $banks;
+        }
+        elsif ( $arg_first =~ /\d+/ && length($arg_first) != 4 ) {
+            print encode( $character_code, help_message() );
+            exit;
         }
         elsif ( $arg_first =~ /\w+/ ) {
             my $banks = _bank_name($arg_first);
             $banks;
+        }
+        else {
+            print encode( $character_code, help_message() );
+            exit;
         }
     };
 

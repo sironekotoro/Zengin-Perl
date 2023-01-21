@@ -144,7 +144,7 @@ is $bankname_branchname, $result;
 
 my $less_bankcode = decode( 'utf8', `perl zengin 001` );
 
-$result = << 'EOS';
+my $error = << 'EOS';
 GETTING STARTED
   # 引数が1つ：銀行検索
     zengin みずほ
@@ -155,7 +155,7 @@ GETTING STARTED
     zengin 0001 001
 EOS
 
-is $less_bankcode, $result;
+is $less_bankcode, $error;
 
 # =====================================
 # テストパターン：zengin 00001
@@ -163,17 +163,6 @@ is $less_bankcode, $result;
 
 my $more_bankname = decode( 'utf8', `perl zengin 00001` );
 
-is $more_bankname, $result;
-
-$result = << 'EOS';
-GETTING STARTED
-  # 引数が1つ：銀行検索
-    zengin みずほ
-    zengin 0001
-
-  # 引数が2つ：銀行ごとの支店検索
-    zengin みずほ 東京
-    zengin 0001 001
-EOS
+is $more_bankname, $error;
 
 done_testing;

@@ -10,9 +10,9 @@ use Moo 2.004004;
 use FindBin;
 use lib "$FindBin::Bin/lib";
 use parent qw/
-    Zengin::Perl::Bank
-    Zengin::Perl::Branch
-    /;
+  Zengin::Perl::Bank
+  Zengin::Perl::Branch
+  /;
 
 our $VERSION = "0.12.20231006";
 
@@ -69,8 +69,7 @@ sub _banks_builder {
         while ( my ( $key, $value ) = each %{$banks} ) {
             $hash{$key} = Zengin::Perl::Bank->new($value);
 
-            $hash{$key}{_path}
-                = File::Spec->catfile( $self->branches_folder,
+            $hash{$key}{_path} = File::Spec->catfile( $self->branches_folder,
                 $value->{code} . '.json' );
         }
         %hash;
@@ -98,7 +97,7 @@ sub bank_name_search {
     for my $code ( sort keys %{$banks} ) {
         my $bank = $banks->{$code};
         push @result, $bank
-            if $bank->name() =~ /$bank_name/;
+          if $bank->name() =~ /$bank_name/;
     }
 
     return \@result;

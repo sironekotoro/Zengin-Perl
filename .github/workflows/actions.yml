@@ -1,0 +1,68 @@
+name: CI/CD
+
+on:
+  push:
+    branches:
+      - 'dev'
+
+  # schedule:
+  # - cron: '0 * * * *'
+
+jobs:
+  build_and_deploy:
+
+    strategy:
+      matrix:
+        os: ['ubuntu-latest']
+        perl: [ '5.38', '5.36' ]
+    name: Perl ${{ matrix.perl }} on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Perl
+        uses: shogo82148/actions-setup-perl@v1
+        with:
+          perl-version: ${{ matrix.perl }}
+      - name: Install Dependencies
+        run: |
+          cpm install
+
+      - name: Clone Source Data Repository
+        uses: actions/checkout@v4
+        with:
+          ref: master
+          repository: zengin-code/source-data
+          sparse-checkout: data
+          sparse-checkout-cone-mode: false
+          path: share
+
+      - name: Run Tests
+        run: |
+         git add -A
+         prove -lv t
+         git reset HEAD
+
+      - name:  GitHub Actionsの環境変数にデータ更新日を設定する
+        run: |
+          echo "UPDATED_AT=$(cat share/data/updated_at)" >> $GITHUB_ENV
+
+      - name: lib/Zengin/Perl.pm のバージョン番号書き換え
+        run: |
+          perl -wpi -E'/^our/ and /(\d{8})/ and s/$1/$ENV{UPDATED_AT}/e' lib/Zengin/Perl.pm
+
+      - name: Push to Repository
+        run: |
+          : # https://intestine.hatenadiary.jp/entry/2021/08/10/151409
+          git config core.filemode false
+          if ! git diff --exit-code --quiet
+          then
+          git add -A
+          git config user.name github-actions
+          git config user.email action@github.com
+          git commit -m "Commit updated files"
+          git push
+          fi

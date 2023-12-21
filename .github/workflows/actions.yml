@@ -4,9 +4,8 @@ on:
   push:
     branches:
       - 'dev'
-
-  # schedule:
-  # - cron: '0 * * * *'
+  schedule:
+  - cron: '0 * * * *'
 
 jobs:
   build_and_deploy:
@@ -53,6 +52,11 @@ jobs:
       - name: lib/Zengin/Perl.pm のバージョン番号書き換え
         run: |
           perl -wpi -E'/^our/ and /(\d{8})/ and s/$1/$ENV{UPDATED_AT}/e' lib/Zengin/Perl.pm
+
+      - name: share/data/updated_at のバージョン番号書き換え
+        run: |
+          echo $(date +\%Y\%m\%d)
+          echo $(date +\%Y\%m\%d) > share/data/updated_at
 
       - name: Push to Repository
         run: |

@@ -53,15 +53,11 @@ jobs:
            prove -lv t
            git reset HEAD
 
-      - name: Push to Repository
+      - name: Merge to Master
+        if: success()
         run: |
-          : # https://intestine.hatenadiary.jp/entry/2021/08/10/151409
-          git config core.filemode false
-          if ! git diff --exit-code --quiet
-          then
-          git add -A
-          git config user.name github-actions
-          git config user.email action@github.com
-          git commit -m "Commit updated files"
-          git push origin master
-          fi
+            git config user.name github-actions
+            git config user.email action@github.com
+            git checkout master
+            git merge --no-ff dev
+            git push origin master

@@ -3,7 +3,7 @@ name: CI/CD
 on:
   push:
     branches:
-      - 'master'
+      - 'dev'
   schedule:
   - cron: '0 * * * *'
 
@@ -42,7 +42,6 @@ jobs:
       - name:  GitHub Actionsの環境変数にデータ更新日を設定する
         run: |
           echo "UPDATED_AT=$(cat share/data/updated_at)" >> $GITHUB_ENV
-          echo $ENV{UPDATED_AT}
 
       - name: lib/Zengin/Perl.pm のバージョン番号書き換え
         run: |
@@ -64,5 +63,5 @@ jobs:
           git config user.name github-actions
           git config user.email action@github.com
           git commit -m "Commit updated files"
-          git push
+          git push origin master
           fi

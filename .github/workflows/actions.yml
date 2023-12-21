@@ -3,7 +3,7 @@ name: CI/CD
 on:
   push:
     branches:
-      - 'dev'
+      - 'master'
   schedule:
   - cron: '0 * * * *'
 
@@ -39,24 +39,20 @@ jobs:
           sparse-checkout-cone-mode: false
           path: share
 
-      - name: Run Tests
-        run: |
-         git add -A
-         prove -lv t
-         git reset HEAD
-
       - name:  GitHub Actionsの環境変数にデータ更新日を設定する
         run: |
           echo "UPDATED_AT=$(cat share/data/updated_at)" >> $GITHUB_ENV
+          echo $ENV{UPDATED_AT}
 
       - name: lib/Zengin/Perl.pm のバージョン番号書き換え
         run: |
           perl -wpi -E'/^our/ and /(\d{8})/ and s/$1/$ENV{UPDATED_AT}/e' lib/Zengin/Perl.pm
 
-      - name: share/data/updated_at のバージョン番号書き換え
+      - name: Run Tests
         run: |
-          echo $(date +\%Y\%m\%d)
-          echo $(date +\%Y\%m\%d) > share/data/updated_at
+           git add -A
+           prove -lv t
+           git reset HEAD
 
       - name: Push to Repository
         run: |

@@ -53,11 +53,11 @@ jobs:
            prove -lv t
            git reset HEAD
 
-           - name: Checkout master branch
-           run: |
-             git fetch
-             git checkout master
-             git pull origin master
+      - name: Checkout master branch
+        run: |
+          git fetch
+          git checkout master
+          git pull origin master
 
       - name: Show current branch
         run: git branch

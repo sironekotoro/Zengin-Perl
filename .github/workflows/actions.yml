@@ -53,6 +53,18 @@ jobs:
            prove -lv t
            git reset HEAD
 
+      - name: Checkout master branch
+        run: |
+          git fetch
+          git checkout master
+          git pull origin master
+
+      - name: Show current branch
+        run: git branch
+
+      - name: Show last commit
+        run: git log -1
+
       - name: Commit and Push Changes
         run: |
          git config core.filemode false

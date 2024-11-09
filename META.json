@@ -4,7 +4,7 @@
       "sironekotoro <develop@sironekotoro.com>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Minilla/v3.1.22, CPAN::Meta::Converter version 2.150010",
+   "generated_by" : "Minilla/v3.1.25, CPAN::Meta::Converter version 2.150010",
    "license" : [
       "perl_5"
    ],
@@ -71,7 +71,7 @@
          "web" : "https://github.com/sironekotoro/Zengin-Perl"
       }
    },
-   "version" : "0.12.20240904",
+   "version" : "0.12.20241029",
    "x_contributors" : [
       "github-actions <action@github.com>",
       "sironekotoro <8675420+sironekotoro@users.noreply.github.com>"

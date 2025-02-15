@@ -6,13 +6,6 @@
     "hira":"ひらの",
     "roma":"hirano"
   },
-  "005":{
-    "code":"005",
-    "name":"田辺",
-    "kana":"タナベ",
-    "hira":"たなべ",
-    "roma":"tanabe"
-  },
   "006":{
     "code":"006",
     "name":"堺",
@@ -110,5 +103,12 @@
     "kana":"アマミ",
     "hira":"あまみ",
     "roma":"amami"
+  },
+  "029":{
+    "code":"029",
+    "name":"かけはし",
+    "kana":"カケハシ",
+    "hira":"かけはし",
+    "roma":"kakehashi"
   }
 }

@@ -65,12 +65,6 @@
   kana: イソハラ
   hira: いそはら
   roma: isohara
-'179':
-  code: '179'
-  name: 神栖
-  kana: カミス
-  hira: かみす
-  roma: kamisu
 '180':
   code: '180'
   name: 小木津
@@ -251,12 +245,6 @@
   kana: グンマケンチヨウ
   hira: ぐんまけんちよう
   roma: gummakenchiyou
-'225':
-  code: '225'
-  name: 前橋東出張所
-  kana: マエバシヒガシ
-  hira: まえばしひがし
-  roma: maebashihigashi
 '227':
   code: '227'
   name: 高崎東
@@ -689,12 +677,6 @@
   kana: ヒラツカ
   hira: ひらつか
   roma: hiratsuka
-'332':
-  code: '332'
-  name: 川崎南
-  kana: カワサキミナミ
-  hira: かわさきみなみ
-  roma: kawasakiminami
 '333':
   code: '333'
   name: 座間
@@ -713,12 +695,6 @@
   kana: ハタノ
   hira: はたの
   roma: hatano
-'336':
-  code: '336'
-  name: 新百合丘出張所
-  kana: シンユリガオカ
-  hira: しんゆりがおか
-  roma: shinyurigaoka
 '337':
   code: '337'
   name: 杉田
@@ -779,9 +755,3 @@
   kana: カシマ
   hira: かしま
   roma: kashima
-'979':
-  code: '979'
-  name: 大雄山
-  kana: ダイユウザン
-  hira: だいゆうざん
-  roma: daiyuuzan

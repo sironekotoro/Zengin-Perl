@@ -209,12 +209,6 @@
   kana: カモ
   hira: かも
   roma: kamo
-'646':
-  code: '646'
-  name: 府中中央
-  kana: フチユウチユウオウ
-  hira: ふちゆうちゆうおう
-  roma: fuchiyuuchiyuuou
 '648':
   code: '648'
   name: 岩谷出張所
@@ -263,12 +257,6 @@
   kana: エキヤ
   hira: えきや
   roma: ekiya
-'665':
-  code: '665'
-  name: 宜山出張所
-  kana: ムベヤマ
-  hira: むべやま
-  roma: mubeyama
 '672':
   code: '672'
   name: 新市

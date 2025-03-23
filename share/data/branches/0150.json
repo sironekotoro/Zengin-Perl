@@ -20,13 +20,6 @@
     "hira":"しんじゆく",
     "roma":"shinjiyuku"
   },
-  "160":{
-    "code":"160",
-    "name":"大宮出張所",
-    "kana":"オオミヤ",
-    "hira":"おおみや",
-    "roma":"oomiya"
-  },
   "180":{
     "code":"180",
     "name":"個人専用",
@@ -488,13 +481,6 @@
     "kana":"マツザキ",
     "hira":"まつざき",
     "roma":"matsuzaki"
-  },
-  "694":{
-    "code":"694",
-    "name":"伊豆稲取",
-    "kana":"イズイナトリ",
-    "hira":"いずいなとり",
-    "roma":"izuinatori"
   },
   "696":{
     "code":"696",

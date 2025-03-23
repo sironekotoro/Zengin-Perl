@@ -215,12 +215,6 @@
   kana: ヤマグチ
   hira: やまぐち
   roma: yamaguchi
-'053':
-  code: '053'
-  name: 下山口
-  kana: シモヤマグチ
-  hira: しもやまぐち
-  roma: shimoyamaguchi
 '057':
   code: '057'
   name: 三田
@@ -359,12 +353,6 @@
   kana: イナガワ
   hira: いながわ
   roma: inagawa
-'097':
-  code: '097'
-  name: 六瀬
-  kana: ムツセ
-  hira: むつせ
-  roma: mutsuse
 '900':
   code: '900'
   name: 本店

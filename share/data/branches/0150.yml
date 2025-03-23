@@ -17,18 +17,6 @@
   kana: シンジユク
   hira: しんじゆく
   roma: shinjiyuku
-'160':
-  code: '160'
-  name: 大宮出張所
-  kana: オオミヤ
-  hira: おおみや
-  roma: oomiya
-'170':
-  code: '170'
-  name: 千葉出張所
-  kana: チバ
-  hira: ちば
-  roma: chiba
 '180':
   code: '180'
   name: 個人専用
@@ -359,12 +347,6 @@
   kana: フジノミヤ
   hira: ふじのみや
   roma: fujinomiya
-'665':
-  code: '665'
-  name: 富士
-  kana: フジ
-  hira: ふじ
-  roma: fuji
 '671':
   code: '671'
   name: 小山
@@ -419,12 +401,6 @@
   kana: イズナガオカ
   hira: いずながおか
   roma: izunagaoka
-'684':
-  code: '684'
-  name: 中伊豆
-  kana: ナカイズ
-  hira: なかいず
-  roma: nakaizu
 '691':
   code: '691'
   name: 下田
@@ -437,12 +413,6 @@
   kana: マツザキ
   hira: まつざき
   roma: matsuzaki
-'694':
-  code: '694'
-  name: 伊豆稲取
-  kana: イズイナトリ
-  hira: いずいなとり
-  roma: izuinatori
 '696':
   code: '696'
   name: イービジネスダイレクト
@@ -527,12 +497,6 @@
   kana: フジエダ
   hira: ふじえだ
   roma: fujieda
-'750':
-  code: '750'
-  name: 島田
-  kana: シマダ
-  hira: しまだ
-  roma: shimada
 '771':
   code: '771'
   name: 岡部
@@ -583,22 +547,16 @@
   roma: taunnetsutowa-ku
 '855':
   code: '855'
-  name: Ｔポイント
-  kana: テイポイント
-  hira: ていぽいんと
-  roma: teipointo
+  name: Ｖポイント
+  kana: ブイポイント
+  hira: ぶいぽいんと
+  roma: buipointo
 '856':
   code: '856'
   name: リクルート
   kana: リクル－ト
   hira: りくる－と
   roma: rikuru-to
-'871':
-  code: '871'
-  name: 金谷
-  kana: カナヤ
-  hira: かなや
-  roma: kanaya
 '872':
   code: '872'
   name: 榛原
@@ -629,18 +587,6 @@
   kana: ナゴヤ
   hira: なごや
   roma: nagoya
-'930':
-  code: '930'
-  name: 札幌
-  kana: サツポロ
-  hira: さつぽろ
-  roma: satsuporo
-'935':
-  code: '935'
-  name: 福岡
-  kana: フクオカ
-  hira: ふくおか
-  roma: fukuoka
 '940':
   code: '940'
   name: 大阪

@@ -2,33 +2,34 @@ name: CI/CD
 
 on:
   push:
-    branches:
-      - 'dev'
+    branches: ['dev']
   schedule:
-  - cron: '0 * * * *'
+    - cron: '0 * * * *'
+
+permissions:
+  contents: write
 
 jobs:
   build_and_deploy:
-
     strategy:
       matrix:
         os: ['ubuntu-latest']
-        perl: [ '5.38', '5.36' ]
-    name: Perl ${{ matrix.perl }} on ${{ matrix.os }}
+        perl: ['5.42', '5.40', '5.38', '5.36']
     runs-on: ${{ matrix.os }}
-    timeout-minutes: 10
 
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup Perl
         uses: shogo82148/actions-setup-perl@v1
         with:
           perl-version: ${{ matrix.perl }}
+
       - name: Install Dependencies
-        run: |
-          cpm install
+        run: cpm install
 
       - name: Clone Source Data Repository
         uses: actions/checkout@v4
@@ -39,41 +40,32 @@ jobs:
           sparse-checkout-cone-mode: false
           path: share
 
-      - name:  GitHub Actionsの環境変数にデータ更新日を設定する
-        run: |
-          echo "UPDATED_AT=$(cat share/data/updated_at)" >> $GITHUB_ENV
+      - name: Set UPDATED_AT
+        run: echo "UPDATED_AT=$(cat share/data/updated_at)" >> $GITHUB_ENV
 
-      - name: lib/Zengin/Perl.pm のバージョン番号書き換え
-        run: |
-          perl -wpi -E'/^our/ and /(\d{8})/ and s/$1/$ENV{UPDATED_AT}/e' lib/Zengin/Perl.pm
+      - name: Update version
+        run: perl -wpi -E'/^our/ and /(\d{8})/ and s/$1/$ENV{UPDATED_AT}/e' lib/Zengin/Perl.pm
 
       - name: Run Tests
-        run: |
-           git add -A
-           prove -lv t
-           git reset HEAD
+        run: prove -lv t
 
       - name: Checkout master branch
+        if: matrix.perl == '5.38' && matrix.os == 'ubuntu-latest'
         run: |
-          git fetch
+          git fetch origin master
           git checkout master
           git pull origin master
 
-      - name: Show current branch
-        run: git branch
-
-      - name: Show last commit
-        run: git log -1
-
       - name: Commit and Push Changes
+        if: matrix.perl == '5.38' && matrix.os == 'ubuntu-latest'
         run: |
-         git config core.filemode false
-         if ! git diff --exit-code --quiet; then
-           git add -A
-           git config user.name github-actions
-           git config user.email action@github.com
-           git commit -m "Commit updated files"
-           git push origin master
-         else
-           echo "No changes to commit"
-         fi
+          git config core.filemode false
+          if ! git diff --exit-code --quiet; then
+            git add -A
+            git config user.name github-actions
+            git config user.email action@github.com
+            git commit -m "Commit updated files"
+            git push origin master
+          else
+            echo "No changes to commit"
+          fi

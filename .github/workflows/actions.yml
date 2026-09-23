@@ -6,15 +6,46 @@ on:
   pull_request:
     branches: ['master', 'dev']
   schedule:
-    - cron: '0 * * * *'
+    - cron: '17 5 * * *'
   workflow_dispatch:
 
 permissions:
   contents: read
 
 jobs:
+  check_source_data:
+    runs-on: ubuntu-24.04
+    outputs:
+      changed: ${{ steps.compare.outputs.changed }}
+    steps:
+      - name: Checkout Repository
+        if: github.event_name == 'schedule' || github.event_name == 'pull_request'
+        uses: actions/checkout@v6
+      - name: Compare upstream data tree
+        id: compare
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EVENT_NAME: ${{ github.event_name }}
+        run: |
+          if [ "$EVENT_NAME" != "schedule" ] && [ "$EVENT_NAME" != "pull_request" ]; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            echo "Manual or dev run: run the full test matrix." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          upstream_tree="$(gh api repos/zengin-code/source-data/git/trees/master --jq '.tree[] | select(.path == "data" and .type == "tree") | .sha')"
+          test -n "$upstream_tree"
+          local_tree="$(git rev-parse HEAD:share/data)"
+          if [ "$upstream_tree" = "$local_tree" ]; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "Upstream data matches share/data; no sync needed." >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            echo "Upstream data changed; run the test matrix before syncing." >> "$GITHUB_STEP_SUMMARY"
+          fi
+
   build_and_deploy:
-    if: github.event_name != 'pull_request'
+    needs: check_source_data
+    if: github.event_name != 'pull_request' && needs.check_source_data.outputs.changed == 'true'
     permissions:
       contents: write
     strategy:

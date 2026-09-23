@@ -112,5 +112,5 @@ jobs:
         with:
           version: v1.6.0
           path: lib/
-          args: --lang perl
+          args: --lang perl --max-cognitive 10 --max-cyclomatic 10
           top-cognitive: '10'
